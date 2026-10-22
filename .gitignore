@@ -1,1 +1,14 @@
 sistema-estudiante-dev/
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store
+
+# IDEs
+.vscode/
+nbproject/
+.idea/
+
+# Temporales y logs
+*.log
+*.tmp
