@@ -103,7 +103,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">                        
+                    <ul class="nav nav-treeview">
                         <li class="nav-item <?= $menuRutaActivo ? 'menu-open' : '' ?>">
                             <a href="#" class="nav-link <?= $menuRutaActivo ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-circle"></i>
@@ -175,7 +175,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                                 </li>
                             </ul>
                         </li>
-                        
+
                     </ul>
                 </li>
 
@@ -220,13 +220,13 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="socio.php" class="nav-link <?= $paginaActual == 'socio.php' ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-person-plus"></i>
                                 <p>Nuevo</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="lista-socios.php" class="nav-link <?= $paginaActual == 'lista-socios.php' ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                            <a href="lista-socio.php" class="nav-link <?= $paginaActual == 'lista-socio.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
                                 <p>Consulta</p>
                             </a>
                         </li>
