@@ -102,7 +102,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">                        
+                    <ul class="nav nav-treeview">
                         <li class="nav-item <?= $menuRutaActivo ? 'menu-open' : '' ?>">
                             <a href="#" class="nav-link <?= $menuRutaActivo ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-circle"></i>
@@ -153,7 +153,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 
                         <li class="nav-item <?= $menuCantonActivo ? 'menu-open' : '' ?>">
                             <a href="#" class="nav-link <?= $menuCantonActivo ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-crosshair"></i>
                                 <p>
                                     Cantón
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -162,19 +162,19 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="canton.php" class="nav-link <?= $paginaActual == 'canton.php' ? 'active' : '' ?>">
-                                        <i class="nav-icon bi bi-record-circle-fill"></i>
+                                        <i class="nav-icon bi bi-file-earmark-plus"></i>
                                         <p>Nuevo</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="lista-cantones.php" class="nav-link <?= $paginaActual == 'lista-cantones.php' ? 'active' : '' ?>">
-                                        <i class="nav-icon bi bi-record-circle-fill"></i>
+                                        <i class="nav-icon bi bi-list"></i>
                                         <p>Consultar</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        
+
                     </ul>
                 </li>
 
