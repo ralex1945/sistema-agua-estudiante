@@ -52,8 +52,23 @@ if ($opcion == "modificar") {
     $sql = "UPDATE empleado set dui=?, nombre=?, apellido=?, telefono=?, fecha_ingreso=?, n_isss=?, nup=?, afp=?, renta=?, sueldo=?,
         idcargo=?, idcanton=?, estado=? WHERE idempleado=?";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("ssssssssssiisi", $dui, $nombre, $apellido, $telefono, $fecha, $isss, $nafp, $afp, $renta, $sueldo, $cargo, $canton,
-        $estado, $idempleado);
+    $stmt->bind_param(
+        "ssssssssssiisi",
+        $dui,
+        $nombre,
+        $apellido,
+        $telefono,
+        $fecha,
+        $isss,
+        $nafp,
+        $afp,
+        $renta,
+        $sueldo,
+        $cargo,
+        $canton,
+        $estado,
+        $idempleado
+    );
     if ($stmt->execute()) {
         echo json_encode([
             "estado" => true,
@@ -162,7 +177,8 @@ if ($opcion == "consultar") {
             ];
         }
 
-        echo json_encode($empleados,
+        echo json_encode(
+            $empleados,
             JSON_UNESCAPED_UNICODE
         );
 
@@ -221,6 +237,42 @@ if ($opcion == "consultarIndividual") {
         ]);
     }
     $conexion->close();
+}
+
+if ($opcion == "consultarLectores") {
+    require_once "../config/conexion.php";
+    try {
+        $sql = "SELECT e.idempleado, CONCAT(e.nombre, ' ', e.apellido) as nombre 
+                FROM empleado AS e 
+                INNER JOIN cargo AS c ON c.idcargo = e.idcargo 
+                WHERE c.nombre = 'LECTOR' 
+                ORDER BY e.nombre, e.apellido";
+
+        $resultado = $conexion->query($sql);
+
+        if (!$resultado) {
+            throw new Exception("Error al consultar los registros");
+        }
+
+        $empleados = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $empleados[] = [
+                'idempleado' => $fila['idempleado'],
+                'nombre' => $fila['nombre']
+            ];
+        }
+
+        echo json_encode($empleados, JSON_UNESCAPED_UNICODE);
+
+        $resultado->free();
+        $conexion->close();
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "No se pudieron obtener los registros"
+        ], JSON_UNESCAPED_UNICODE);
+    }
 }
 
 

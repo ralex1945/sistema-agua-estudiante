@@ -41,7 +41,8 @@ $menuConfiguracionActivo = in_array(
 // Páginas del menú Empleado
 $paginasEmpleado = [
     'empleado.php',
-    'lista-empleados.php'
+    'lista-empleados.php',
+    'asignarRuta.php'
 ];
 
 $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
@@ -181,7 +182,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 
                 <li class="nav-item <?= $menuEmpleadoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuEmpleadoActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                        <i class="nav-icon bi bi-people"></i>
                         <p>
                             Empleado
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -200,12 +201,17 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                                 <p>Consulta</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="asignarRuta.php" class="nav-link <?= $paginaActual == 'asignarRuta.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Asignar Ruta</p>
+                            </a>
                     </ul>
                 </li>
 
                 <li class="nav-item <?= $menuSocioActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuSocioActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-people"></i>
+                        <i class="nav-icon bi bi-person"></i>
                         <p>
                             Socio
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -229,7 +235,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 
                 <li class="nav-item <?= $menuContratoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuContratoActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-file-earmark-check"></i>
+                        <i class="nav-icon bi bi-check2-square"></i>
                         <p>
                             Contrato
                             <i class="nav-arrow bi bi-chevron-right"></i>
