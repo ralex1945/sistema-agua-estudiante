@@ -48,13 +48,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         paginationSizeSelector: [10, 25, 50, 100],
         movableColumns: true,
         columns: [
-            { title: "ID", field: "idempleado" },
+            { title: "ID", field: "idempleado", visible:false },
             { title: "DUI", field: "dui" },
             { title: "Nombre", field: "nombre" },
             { title: "Apellido", field: "apellido" },
-            { title: "Full Name", field: "nombreCompleto" },
             { title: "Telefono", field: "telefono" },
-            { title: "Tamanio", field: "tamanio" },
+            { title: "Fecha Ingreso", field: "fecha_ingreso" },
+            { title: "ISSS", field: "n_isss", visible:false },
+            { title: "N AFP", field: "nup", visible:false },
+            { title: "Afp", field: "afp", visible:false },
+            { title: "Tipo Renta", field: "renta", visible:false },
+            { title: "Sueldo ($)", field: "sueldo" },
+            { title: "Cargo", field: "idcargo" },
+            { title: "Canton", field: "idcanton" },
+            { title: "Estado", field: "estado" },
             {
                 title: "Acciones", field: "acciones", hozAlign: "center", headerSort: false,
                 formatter: function () {

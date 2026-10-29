@@ -67,7 +67,7 @@
             <div class="col-3 col-md-3 col-lg-3"></div>
 
             <div class="col-12 col-md-6 col-lg-6">
-              <form id="formulario" name="formulario" method="POST" action="#">
+              <form id="formulario" name="formulario" method="POST" action="#" autocomplete="off">
                 <div class="card card-secondary card-outline mb-4">
                   <div class="card-header">
                     <div class="card-title">Registro de Cargo</div>

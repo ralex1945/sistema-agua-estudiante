@@ -3,38 +3,57 @@ $dui = $_POST['dui'] ?? '';
 $nombre = isset($_REQUEST["nombre"]) ? $_REQUEST["nombre"] : "";
 $apellido = isset($_REQUEST["apellido"]) ? $_REQUEST["apellido"] : "";
 $telefono = $_POST['telefono'] ?? '';
+$isss = $_POST['isss'] ?? '';
+$afp = $_POST['afp'] ?? '';
+$nafp = $_POST['nafp'] ?? $_POST['nup'] ?? '';
+$renta = $_POST['renta'] ?? '';
+$sueldo = !empty($_POST['sueldo']) ? floatval($_POST['sueldo']) : 0.00;
+$cargo = !empty($_POST['cargo']) ? intval($_POST['cargo']) : 0;
+$canton = !empty($_POST['canton']) ? intval($_POST['canton']) : 0;
+$estado = $_POST['estado'] ?? 'ACTIVO';
+$fecha = !empty($_POST['fecha']) ? $_POST['fecha'] : (!empty($_POST['fecha_ingreso']) ? $_POST['fecha_ingreso'] : null);
 $idempleado = $_POST['idempleado'] ?? '';
 
-$opcion = isset($_REQUEST["opcion"]) ? $_REQUEST["opcion"] : "";
+$opcion = $_POST['opcion'] ?? '';
 
 if ($opcion == "guardar") {
     require_once "../config/conexion.php";
 
-    //$clave = password_hash($password, PASSWORD_DEFAULT);
+    try {
+        $sql = "INSERT INTO empleado (dui, nombre, apellido, telefono, fecha_ingreso, n_isss, nup, afp, renta, sueldo, idcargo, idcanton, estado)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("ssssssssssiis", $dui, $nombre, $apellido, $telefono, $fecha, $isss, $nafp, $afp, $renta, $sueldo, $cargo, $canton, $estado);
 
-    $sql = "INSERT INTO empleado (dui, nombre, apellido, telefono) VALUES(?,?,?,?)";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("ssss", $dui, $nombre, $apellido, $telefono);
-    if ($stmt->execute()) {
-        echo json_encode([
-            "estado" => true,
-            "mensaje" => "Datos Guardados Correctamente"
-        ]);
-    } else {
+        if ($stmt->execute()) {
+            echo json_encode([
+                "estado" => true,
+                "mensaje" => "Datos Guardados Correctamente"
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "Error al guardar los datos: " . $stmt->error
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
         echo json_encode([
             "estado" => false,
-            "mensaje" => "Error al guardar los datos"
+            "mensaje" => "Error en la base de datos: " . $e->getMessage()
         ]);
     }
-    $stmt->close();
     $conexion->close();
 }
+
 if ($opcion == "modificar") {
     require_once "../config/conexion.php";
 
-    $sql = "UPDATE empleado set dui=?, nombre=?, apellido=?, telefono=? WHERE idempleado=?";
+    $sql = "UPDATE empleado set dui=?, nombre=?, apellido=?, telefono=?, fecha_ingreso=?, n_isss=?, nup=?, afp=?, renta=?, sueldo=?,
+        idcargo=?, idcanton=?, estado=? WHERE idempleado=?";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("ssssi", $dui, $nombre, $apellido, $telefono, $idempleado);
+    $stmt->bind_param("ssssssssssiisi", $dui, $nombre, $apellido, $telefono, $fecha, $isss, $nafp, $afp, $renta, $sueldo, $cargo, $canton,
+        $estado, $idempleado);
     if ($stmt->execute()) {
         echo json_encode([
             "estado" => true,
@@ -46,56 +65,67 @@ if ($opcion == "modificar") {
             "mensaje" => "Error al modificar los datos"
         ]);
     }
+
     $stmt->close();
     $conexion->close();
 }
-if ($opcion == "eliminar") {
 
+if ($opcion == "eliminar") {
     require_once "../config/conexion.php";
 
-    $sql = "DELETE FROM empleado WHERE idempleado=?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $idempleado);
-    if ($stmt->execute()) {
-        echo json_encode([
-            "estado" => true,
-            "mensaje" => "Datos Eliminados Correctamente"
-        ]);
-    } else {
+    try {
+        $sql = "DELETE FROM empleado WHERE idempleado=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $idempleado);
+        if ($stmt->execute()) {
+            echo json_encode([
+                "estado" => true,
+                "mensaje" => "Datos Eliminados Correctamente"
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "Error al eliminar los datos: " . $stmt->error
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
         echo json_encode([
             "estado" => false,
-            "mensaje" => "Error al eliminar los datos"
+            "mensaje" => "Error al eliminar: " . $e->getMessage()
         ]);
     }
-    $stmt->close();
     $conexion->close();
 }
 
 if ($opcion == "consultarDUI") {
     require_once "../config/conexion.php";
 
-    $sql = "SELECT dui FROM empleado WHERE dui=?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $dui);
+    try {
+        $sql = "SELECT dui FROM empleado WHERE dui=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $dui);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
 
-    $stmt->execute();
-
-    $resultado = $stmt->get_result();
-
-    if ($resultado->num_rows > 0) {
-
-        echo json_encode([
-            "estado" => true,
-            "mensaje" => "Este Dui ya existe"
-        ]);
-    } else {
+        if ($resultado->num_rows > 0) {
+            echo json_encode([
+                "estado" => true,
+                "mensaje" => "Este Dui ya existe"
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "Disponible"
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
         echo json_encode([
             "estado" => false,
-            "mensaje" => "a"
+            "mensaje" => $e->getMessage()
         ]);
     }
-
-    $stmt->close();
     $conexion->close();
 }
 
@@ -103,18 +133,15 @@ if ($opcion == "consultar") {
     require_once "../config/conexion.php";
 
     try {
-        $sql = "SELECT idempleado,dui, nombre, apellido, telefono, concat(nombre,'-',apellido) as nombreCompleto
-                FROM empleado
-                ORDER BY apellido, nombre";
+        $sql = "SELECT * FROM empleado ORDER BY apellido, nombre";
 
         $resultado = $conexion->query($sql);
 
         if (!$resultado) {
-            throw new Exception("Error al consultar los empleadosxx");
+            throw new Exception("Error al consultar los registros");
         }
 
         $empleados = [];
-
         while ($fila = $resultado->fetch_assoc()) {
             //$empleados[] = $fila;
             $empleados[] = [
@@ -123,55 +150,118 @@ if ($opcion == "consultar") {
                 'nombre' => $fila['nombre'],
                 'apellido' => $fila['apellido'],
                 'telefono' => $fila['telefono'],
-                'nombreCompleto' => $fila['nombreCompleto'],
-                'tamanio' => strlen($fila['nombre']) * strlen($fila['apellido'])
+                'fecha_ingreso' => date("d-m-Y", strtotime($fila['fecha_ingreso'])),
+                'n_isss' => $fila['n_isss'],
+                'nup' => $fila['nup'],
+                'afp' => $fila['afp'],
+                'renta' => $fila['renta'],
+                'sueldo' => number_format($fila['sueldo'], 2, '.', ','),
+                'idcargo' => getCargo($fila['idcargo'], $conexion),
+                'idcanton' => getCanton($fila['idcanton'], $conexion),
+                'estado' => $fila['estado']
             ];
         }
 
-        echo json_encode(
-            $empleados,
+        echo json_encode($empleados,
             JSON_UNESCAPED_UNICODE
         );
 
         $resultado->free();
-        $conexion->close();
     } catch (Throwable $e) {
 
         echo json_encode([
             "mensaje" => "No se pudieron obtener los registros"
         ], JSON_UNESCAPED_UNICODE);
     }
+    $conexion->close();
 }
+
 if ($opcion == "consultarIndividual") {
     require_once "../config/conexion.php";
 
-    $sql = "SELECT idempleado, dui, nombre, apellido, telefono FROM empleado WHERE idempleado=?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $idempleado);
+    try {
+        $sql = "SELECT idempleado, dui, nombre, apellido, telefono, fecha_ingreso, n_isss, nup, afp, renta, sueldo, idcargo, idcanton, estado FROM empleado WHERE idempleado=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $idempleado);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
 
-    $stmt->execute();
-
-    $resultado = $stmt->get_result();
-
-    if ($resultado->num_rows > 0) {
-        $datos = $resultado->fetch_assoc();
-        echo json_encode([
-            "estado" => true,
-            "datos" => [
-                "idempleado" => $datos["idempleado"],
-                "dui" => $datos["dui"],
-                "nombre" => $datos["nombre"],
-                "apellido" => $datos["apellido"],
-                "telefono" => $datos["telefono"]
-            ]
-        ]);
-    } else {
+        if ($resultado->num_rows > 0) {
+            $datos = $resultado->fetch_assoc();
+            echo json_encode([
+                "estado" => true,
+                "datos" => [
+                    "idempleado" => $datos["idempleado"],
+                    "dui" => $datos["dui"],
+                    "nombre" => $datos["nombre"],
+                    "apellido" => $datos["apellido"],
+                    "telefono" => $datos["telefono"],
+                    "fecha_ingreso" => $datos["fecha_ingreso"],
+                    "n_isss" => $datos["n_isss"],
+                    "nup" => $datos["nup"],
+                    "afp" => $datos["afp"],
+                    "renta" => $datos["renta"],
+                    "sueldo" => $datos["sueldo"],
+                    "idcargo" => $datos["idcargo"],
+                    "idcanton" => $datos["idcanton"],
+                    "estado" => $datos["estado"]
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "datos" => "No Existe"
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
         echo json_encode([
             "estado" => false,
-            "datos" => "No Existe"
+            "mensaje" => $e->getMessage()
         ]);
+    }
+    $conexion->close();
+}
+
+
+function getCargo($id, $conexion)
+{
+    $sql = "SELECT nombre FROM cargo WHERE idcargo = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $id);
+
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    $cargo = "";
+
+    if ($fila = $resultado->fetch_assoc()) {
+        $cargo = $fila['nombre'];
     }
 
     $stmt->close();
-    $conexion->close();
+    //$conexion->close();
+
+    return $cargo;
+}
+
+function getCanton($id, $conexion)
+{
+    $sql = "SELECT nombre FROM canton WHERE idcanton = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $id);
+
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    $cargo = "";
+
+    if ($fila = $resultado->fetch_assoc()) {
+        $cargo = $fila['nombre'];
+    }
+
+    $stmt->close();
+    //$conexion->close();
+
+    return $cargo;
 }

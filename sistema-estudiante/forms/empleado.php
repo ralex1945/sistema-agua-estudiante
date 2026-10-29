@@ -63,126 +63,117 @@
       </div>
       <div class="app-content">
         <div class="container-fluid">
-          <form id="formulario" name="formulario" method="POST" action="#">
-            <div class="row g-4">
+          <div class="row g-4">
+            <form id="formulario" name="formulario" method="POST" autocomplete="off">
+              <div class="row ">
 
-              <!-- Columna Izquierda: Datos del Empleado -->
-              <div class="col-md-6">
-                <div class="card card-secondary card-outline mb-4">
-                  <div class="card-header">
-                    <div class="card-title">Datos del Empleado</div>
+                <!-- Columna Izquierda: Datos del Empleado -->
+                <div class="col-12 col-md-6">
+                  <div class="card card-secondary card-outline mb-4">
+                    <div class="card-header">
+                      <div class="card-title">Datos del Empleado</div>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="dui" name="dui" placeholder="" maxlength="10" />
+                        <label for="dui">DUI(*)</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" />
+                        <label for="nombre">Nombre(*)</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="apellido" name="apellido" placeholder="" />
+                        <label for="apellido">Apellido(*)</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="telefono" name="telefono" placeholder="" />
+                        <label for="telefono">Teléfono(*)</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="isss" name="isss" placeholder="" maxlength="10" />
+                        <label for="isss">N° ISSS</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <select class="form-select" id="afp" name="afp" aria-label="Seleccione la AFP">
+                          <option value="" selected>[SELECCIONE]</option>
+                          <option value="CRECER">AFP CRECER</option>
+                          <option value="CONFIA">AFP CONFIA</option>
+                        </select>
+                        <label for="afp">Seleccione la AFP</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="nafp" name="nafp" placeholder="" />
+                        <label for="nafp">NUP</label>
+                      </div>
+                    </div>
                   </div>
-                  <div class="card-body">
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="dui" name="dui" placeholder="" maxlength="10" />
-                      <label for="dui">DUI(*)</label>
+                </div>
+
+                <!-- Columna Derecha: Otros Datos -->
+                <div class="col-12 col-md-6">
+                  <div class="card card-secondary card-outline mb-4">
+                    <div class="card-header">
+                      <div class="card-title">Otros Datos</div>
                     </div>
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" />
-                      <label for="nombre">Nombre(*)</label>
+                    <div class="card-body">
+
+                      <div class="form-floating mb-3">
+                        <select class="form-select" id="renta" name="renta" aria-label="Seleccione la RENTA">
+                          <option value="0" selected>[SELECCIONE]</option>
+                          <option value="PLANILLA">Renta por Salario</option>
+                          <option value="PROFESIONA">Renta por Profesional 10%</option>
+                        </select>
+                        <label for="renta">Seleccione la RENTA (*)</label>
+                      </div>
+
+                      <div class="form-floating mb-3">
+                        <input type="numeric" class="form-control" id="sueldo" name="sueldo" placeholder="" />
+                        <label for="sueldo">Sueldo ($)(*)</label>
+                      </div>
+
+                      <div class="form-floating mb-3">
+                        <select class="form-select" id="cargo" name="cargo" aria-label="Cargo del empleado">
+                          <option value="0" selected>[SELECCIONE UN CARGO]</option>
+                        </select>
+                        <label for="cargo">Cargo del empleado (*)</label>
+                      </div>
+
+                      <div class="form-floating mb-3">
+                        <select class="form-select" id="canton" name="canton" aria-label="Donde vive el empleado">
+                          <option value="0" selected>[SELECCIONE UN CANTON]</option>
+                        </select>
+                        <label for="canton">Donde vive el empleado (*)</label>
+                      </div>
+
+                      <div class="form-floating mb-3">
+                        <select class="form-select" id="estado" name="estado" aria-label="Seleccione Estado">
+                          <option value="0" selected>[SELECCIONE]</option>
+                          <option value="ACTIVO">ACTIVO</option>
+                          <option value="INACTIVO">INACTIVO</option>
+                        </select>
+                        <label for="estado">Seleccione Estado (*)</label>
+                      </div>
+
+                      <div class="form-floating mb-3">
+                        <input type="date" class="form-control" id="fecha" name="fecha" placeholder="dd/mm/aaaa" />
+                        <label for="fecha">Fecha de ingreso(*)</label>
+                      </div>
+
                     </div>
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="apellido" name="apellido" placeholder="" />
-                      <label for="apellido">Apellido(*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="telefono" name="telefono" placeholder="" />
-                      <label for="telefono">Teléfono(*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="isss" name="isss" placeholder="" />
-                      <label for="isss">N° ISSS</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="afp" name="afp" aria-label="Seleccione la AFP">
-                        <option value="" selected>[SELECCIONE]</option>
-                        <option value="CRECER">AFP CRECER</option>
-                        <option value="CONFIA">AFP CONFIA</option>
-                      </select>
-                      <label for="afp">Seleccione la AFP</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="nup" name="nup" placeholder="" />
-                      <label for="nup">NUP</label>
+                    <div class="card-footer">
+                      <button type="button" class="btn btn-success" id="btnGuardar">
+                        Guardar
+                      </button>
+                      <button type="button" class="btn btn-primary float-end" id="btnCancelar">
+                        Cancelar
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!-- Columna Derecha: Otros Datos -->
-              <div class="col-md-6">
-                <div class="card card-secondary card-outline mb-4">
-                  <div class="card-header">
-                    <div class="card-title">Otros Datos</div>
-                  </div>
-                  <div class="card-body">
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="renta" name="renta" aria-label="Seleccione la RENTA">
-                        <option value="" selected>[SELECCIONE]</option><!-- MODIFICAR DESPUES -->
-                        <option value="SI">APLICA RENTA (SI)</option>
-                        <option value="NO">NO APLICA (NO)</option>
-                      </select>
-                      <label for="renta">Seleccione la RENTA (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="sueldo" name="sueldo" placeholder="" />
-                      <label for="sueldo">Sueldo ($)(*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="cargo" name="cargo" aria-label="Cargo del empleado">
-                        <option value="" selected>[SELECCIONE UN CARGO]</option>
-                        <?php
-                        require_once "../config/conexion.php";
-                        $resCargos = $conexion->query("SELECT idcargo, nombre FROM cargo ORDER BY nombre ASC");
-                        if ($resCargos) {
-                          while ($filaCargo = $resCargos->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($filaCargo['idcargo']) . '">' . htmlspecialchars($filaCargo['nombre']) . '</option>';
-                          }
-                        }
-                        ?>
-                      </select>
-                      <label for="cargo">Cargo del empleado (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="canton" name="canton" aria-label="Donde vive el empleado">
-                        <option value="" selected>[SELECCIONE UN CANTON]</option>
-                        <?php
-                        $resCantones = $conexion->query("SELECT idcanton, nombre FROM canton ORDER BY nombre ASC");
-                        if ($resCantones) {
-                          while ($filaCanton = $resCantones->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($filaCanton['idcanton']) . '">' . htmlspecialchars($filaCanton['nombre']) . '</option>';
-                          }
-                        }
-                        ?>
-                      </select>
-                      <label for="canton">Donde vive el empleado (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="estado" name="estado" aria-label="Seleccione Estado">
-                        <option value="" selected>[SELECCIONE]</option>
-                        <option value="ACTIVO">ACTIVO</option>
-                        <option value="INACTIVO">INACTIVO</option>
-                      </select>
-                      <label for="estado">Seleccione Estado (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <input type="date" class="form-control" id="fecha_ingreso" name="fecha_ingreso" placeholder="dd/mm/aaaa" />
-                      <label for="fecha_ingreso">Fecha de ingreso(*)</label>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <button type="button" class="btn btn-success" id="btnGuardar">
-                      Guardar
-                    </button>
-                    <button type="button" class="btn btn-primary float-end" id="btnCancelar">
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </main>
@@ -207,7 +198,7 @@
   <!--begin::OverlayScrollbars Configure-->
   <script src="../js/para-el-menu.js"></script>
   <!--end::OverlayScrollbars Configure-->
-  <script src="../js/JSempleado.js?v=<?php echo filemtime('../js/JSempleado.js'); ?>"></script>
+  <script src="../js/JSEmpleado.js?v=<?php echo filemtime('../js/JSEmpleado.js'); ?>"></script>
 </body>
 
 </html>
