@@ -1,8 +1,11 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
+error_reporting(0);
+
 $ncontrato = $_POST['numero'] ?? '';
 $fecha = $_POST['fecha'] ?? '';
-$monto = !empty($_POST['monto']) ? floatval($_POST['monto']) : 0.00;
-$prima = !empty($_POST['prima']) ? floatval($_POST['prima']) : 0.00;
+$monto = $_POST['monto'] ?? '0';
+$prima = $_POST['prima'] ?? '0';
 $idsocio = $_POST['idsocio'] ?? '';
 $idempleado1 = !empty($_POST['empleado1']) ? intval($_POST['empleado1']) : 0;
 $cargo1 = $_POST['cargo1'] ?? '';
@@ -26,34 +29,27 @@ if ($opcion == "generarNumero") {
 if ($opcion == "guardar") {
     require_once "../config/conexion.php";
 
-    if (empty($ncontrato)) {
-        $ncontrato = getNumeroContrato($conexion);
-    }
+    ////OBTENER EL NUMERO DE CONTRATO
 
-    try {
-        $sql = "INSERT INTO contrato (ncontrato, fecha, monto, prima, idsocio, idempleado1, cargo1, idempleado2, cargo2)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("ssddiisis", $ncontrato, $fecha, $monto, $prima, $idsocio, $idempleado1, $cargo1, $idempleado2, $cargo2);
+    $ncontrato = getNumeroContrato($conexion);//0+1
+    $prima = 0;
 
-        if ($stmt->execute()) {
-            echo json_encode([
-                "estado" => true,
-                "mensaje" => "Contrato Guardado Correctamente"
-            ]);
-        } else {
-            echo json_encode([
-                "estado" => false,
-                "mensaje" => "Error al guardar los datos: " . $stmt->error
-            ]);
-        }
-        $stmt->close();
-    } catch (Throwable $e) {
+    $sql = "INSERT INTO contrato (ncontrato, fecha, monto, prima, idsocio, idempleado1, cargo1, idempleado2, cargo2) VALUES(?,?,?,?,?,?,?,?,?)";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("sssdiisis", $ncontrato, $fecha, $monto, $prima, $idsocio, $idempleado1, $cargo1, $idempleado2, $cargo2);
+    if ($stmt->execute()) {
+        echo json_encode([
+            "estado" => true,
+            "mensaje" => "Datos Guardados Correctamente"
+        ]);
+    } else {
         echo json_encode([
             "estado" => false,
-            "mensaje" => "Error en la base de datos: " . $e->getMessage()
+            "mensaje" => "Error al guardar los datos"
         ]);
     }
+
+    $stmt->close();
     $conexion->close();
 }
 
@@ -61,7 +57,15 @@ if ($opcion == "consultar") {
     require_once "../config/conexion.php";
 
     try {
-        $sql = "SELECT * FROM contrato ORDER BY idcontrato DESC";
+        $sql = "SELECT c.*, 
+                       CONCAT(s.nombre, ' ', s.apellido) AS socio,
+                       CONCAT(e1.nombre, ' ', e1.apellido) AS empleado1,
+                       CONCAT(e2.nombre, ' ', e2.apellido) AS empleado2
+                FROM contrato c
+                LEFT JOIN socio s ON c.idsocio = s.idsocio
+                LEFT JOIN empleado e1 ON c.idempleado1 = e1.idempleado
+                LEFT JOIN empleado e2 ON c.idempleado2 = e2.idempleado
+                ORDER BY c.idcontrato DESC";
 
         $resultado = $conexion->query($sql);
 
@@ -78,9 +82,12 @@ if ($opcion == "consultar") {
                 'monto' => number_format($fila['monto'], 2, '.', ','),
                 'prima' => number_format($fila['prima'], 2, '.', ','),
                 'idsocio' => $fila['idsocio'],
+                'socio' => $fila['socio'] ?? 'N/A',
                 'idempleado1' => $fila['idempleado1'],
+                'empleado1' => $fila['empleado1'] ?? 'N/A',
                 'cargo1' => $fila['cargo1'],
                 'idempleado2' => $fila['idempleado2'],
+                'empleado2' => $fila['empleado2'] ?? 'N/A',
                 'cargo2' => $fila['cargo2']
             ];
         }
@@ -93,6 +100,119 @@ if ($opcion == "consultar") {
         echo json_encode([
             "mensaje" => "No se pudieron obtener los registros"
         ], JSON_UNESCAPED_UNICODE);
+    }
+    $conexion->close();
+}
+
+if ($opcion == "consultarIndividual") {
+    require_once "../config/conexion.php";
+
+    $idcontrato = !empty($_POST['idcontrato']) ? intval($_POST['idcontrato']) : 0;
+
+    try {
+        $sql = "SELECT c.*, s.dui, CONCAT(s.nombre, ' ', s.apellido) AS nombreCompleto
+                FROM contrato c
+                INNER JOIN socio s ON c.idsocio = s.idsocio
+                WHERE c.idcontrato = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $idcontrato);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($resultado->num_rows > 0) {
+            $fila = $resultado->fetch_assoc();
+            echo json_encode([
+                "estado" => true,
+                "datos" => [
+                    "idcontrato" => $fila['idcontrato'],
+                    "ncontrato" => $fila['ncontrato'],
+                    "fecha" => $fila['fecha'],
+                    "monto" => $fila['monto'],
+                    "idsocio" => $fila['idsocio'],
+                    "dui" => $fila['dui'],
+                    "nombreCompleto" => $fila['nombreCompleto'],
+                    "idempleado1" => $fila['idempleado1'],
+                    "cargo1" => $fila['cargo1'],
+                    "idempleado2" => $fila['idempleado2'],
+                    "cargo2" => $fila['cargo2']
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "Contrato no encontrado"
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "Error en la base de datos: " . $e->getMessage()
+        ]);
+    }
+    $conexion->close();
+    exit;
+}
+
+if ($opcion == "modificar") {
+    require_once "../config/conexion.php";
+
+    $idcontrato = !empty($_POST['idcontrato']) ? intval($_POST['idcontrato']) : 0;
+
+    try {
+        $sql = "UPDATE contrato SET fecha=?, monto=?, idsocio=?, idempleado1=?, cargo1=?, idempleado2=?, cargo2=? WHERE idcontrato=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("sdiisisi", $fecha, $monto, $idsocio, $idempleado1, $cargo1, $idempleado2, $cargo2, $idcontrato);
+
+        if ($stmt->execute()) {
+            echo json_encode([
+                "estado" => true,
+                "mensaje" => "Datos Modificados Correctamente"
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "Error al modificar los datos: " . $stmt->error
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "Error en la base de datos: " . $e->getMessage()
+        ]);
+    }
+    $conexion->close();
+    exit;
+}
+
+if ($opcion == "eliminar") {
+    require_once "../config/conexion.php";
+
+    $idcontrato = !empty($_POST['idcontrato']) ? intval($_POST['idcontrato']) : 0;
+
+    try {
+        $sql = "DELETE FROM contrato WHERE idcontrato = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $idcontrato);
+
+        if ($stmt->execute()) {
+            echo json_encode([
+                "estado" => true,
+                "mensaje" => "Contrato Eliminado Correctamente"
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "Error al eliminar: " . $stmt->error
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "Error en la base de datos: " . $e->getMessage()
+        ]);
     }
     $conexion->close();
 }
@@ -164,25 +284,18 @@ if ($opcion == "consultarDUISocio") {
 
 function getNumeroContrato($conexion)
 {
-    try {
-        $sql = "SELECT MAX(idcontrato) as ultimo FROM contrato";
+    $sql = "SELECT MAX(ncontrato) AS maximo FROM contrato";
 
-        $stmt =$conexion=>prepare($sql);
-        
-        $stmt->execute();
+    $resto = $conexion->query($sql);
+    $resultado = $resto->fetch_assoc();
 
-        $resultado = $stmt->get_result();
+    $maximo = 0;
 
-        $maximo=0;
-
-        if($fila=$resultado=>fetch_assoc()){
-            $maximo=$fila['maximo'];
-        })
-
-        stmt=>close();
-
-        return $cargo;
-        
-    } catch (Throwable $e) {
+    if ($resultado && $resultado['maximo'] !== null) {
+        $maximo = $resultado['maximo'];
     }
+
+    $maximo = $maximo + 1;
+
+    return $maximo;
 }

@@ -155,6 +155,9 @@ if (formulario) {
             const datos = new FormData(formulario);
             datos.append("opcion", opcion);
             datos.append("idsocio", btnGuardar.dataset.id);
+            if (modoModificar && btnGuardar.dataset.idcontrato) {
+                datos.append("idcontrato", btnGuardar.dataset.idcontrato);
+            }
 
             btnGuardar.disabled = true;
             btnGuardar.textContent = "Procesando...";
@@ -240,6 +243,7 @@ async function cargarNumeroContrato() {
             const numero = document.getElementById("numero");
             if (numero) {
                 numero.value = resultado.numero;
+                validarCampo(numero);
             }
         }
     } catch (error) {
@@ -268,7 +272,9 @@ function limpiarCampos() {
     }
     if (btnGuardar) {
         btnGuardar.disabled = true;
+        btnGuardar.textContent = "Guardar";
         delete btnGuardar.dataset.id;
+        delete btnGuardar.dataset.idcontrato;
     }
     cargarNumeroContrato();
 }
@@ -314,5 +320,60 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Generar número de contrato automático
-    cargarNumeroContrato();
+    await cargarNumeroContrato();
+
+    ///////CUANDO RECIBE PARAMETROS (MODIFICAR)
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (id) {
+        try {
+            const datos = new FormData();
+            datos.append("opcion", "consultarIndividual");
+            datos.append("idcontrato", id);
+
+            const respuesta = await fetch("DAOContrato.php", {
+                method: "POST",
+                body: datos
+            });
+
+            if (!respuesta.ok) {
+                console.error(respuesta.status);
+                throw new Error("Error HTTP: " + respuesta.status);
+            }
+
+            const resultado = await respuesta.json();
+
+            if (resultado.estado) {
+                const info = resultado.datos;
+                if (numero) numero.value = info.ncontrato;
+                if (dui) dui.value = info.dui;
+                if (nombre) nombre.value = info.nombreCompleto;
+                if (fecha) fecha.value = info.fecha;
+                if (monto) monto.value = info.monto;
+                if (empleado1) empleado1.value = info.idempleado1;
+                if (cargo1) cargo1.value = info.cargo1;
+                if (empleado2) empleado2.value = info.idempleado2;
+                if (cargo2) cargo2.value = info.cargo2;
+
+                const inputId = document.getElementById("idcontrato");
+                if (inputId) inputId.value = info.idcontrato;
+
+                btnGuardar.disabled = false;
+                btnGuardar.textContent = "Modificar";
+                btnGuardar.dataset.id = info.idsocio;
+                btnGuardar.dataset.idcontrato = info.idcontrato;
+
+                validarCampo(dui);
+                validarCampo(nombre);
+                validarCampo(numero);
+                validarCampo(fecha);
+                validarCampo(monto);
+                validarCampo(empleado1);
+                validarCampo(cargo1);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 });

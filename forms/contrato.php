@@ -66,6 +66,7 @@
           <div class="row">
 
             <form id="formulario" name="formulario" method="POST" action="#" autocomplete="off" >
+              <input type="hidden" id="idcontrato" name="idcontrato" value="" />
               <div class="row">
                 <div class="col-12 col-md-12 col-lg-12">
                   <div class="card card-secondary card-outline mb-4">

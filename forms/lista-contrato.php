@@ -89,7 +89,7 @@
               <div id="users-table" aria-label="Users"></div>
 
               <div class="mt-2 text-end">
-                <strong id="total-registros">Total de empleados: 0</strong>
+                <strong id="total-registros">Total de contratos: 0</strong>
               </div>
               
               <div id="table-pagination" class="d-flex flex-wrap gap-2 justify-content-end mt-2"></div>
