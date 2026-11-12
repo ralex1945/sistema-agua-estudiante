@@ -33,12 +33,20 @@ $paginasTarifa = [
 
 $menuTarifaActivo = in_array($paginaActual, $paginasTarifa);
 
+// Páginas del menú Configuración > Número Recibos (Tiraje)
+$paginasTiraje = [
+    'tiraje.php'
+];
+
+$menuTirajeActivo = in_array($paginaActual, $paginasTiraje);
+
 // Páginas del menú Configuración, merge agrega mas opciones al vector
 $paginasConfiguracion = array_merge(
     $paginasRuta,
     $paginasCargo,
     $paginasCanton,
     $paginasTarifa,
+    $paginasTiraje,
     ['empresa.php', 'editors.php']
 );
 
@@ -222,6 +230,24 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
                                     <a href="lista-tarifa.php" class="nav-link <?= $paginaActual == 'lista-tarifa.php' ? 'active' : '' ?>">
                                         <i class="nav-icon bi bi-list"></i>
                                         <p>Consultar</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item <?= $menuTirajeActivo ? 'menu-open' : '' ?>">
+                            <a href="#" class="nav-link <?= $menuTirajeActivo ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-currency-dollar"></i>
+                                <p>
+                                    Número Recibos
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="tiraje.php" class="nav-link <?= $paginaActual == 'tiraje.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-geo-alt"></i>
+                                        <p>Nuevo</p>
                                     </a>
                                 </li>
                             </ul>

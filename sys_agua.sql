@@ -1114,6 +1114,25 @@ INSERT INTO `tarifa` (`idtarifa`, `desde`, `hasta`, `tipo_cobro`, `precio`) VALU
 (22, 91, 100, 'POR_METRO', 3.1),
 (23, 101, 9999, 'POR_METRO', 3.5);
 
+--
+-- Estructura de tabla para la tabla `tiraje`
+--
+
+CREATE TABLE IF NOT EXISTS `tiraje` (
+  `idtiraje` int(11) NOT NULL AUTO_INCREMENT,
+  `prefijo` int(11) NOT NULL,
+  `ultimo` bigint(20) NOT NULL,
+  `estado` text NOT NULL,
+  PRIMARY KEY (`idtiraje`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tiraje`
+--
+
+INSERT INTO `tiraje` (`idtiraje`, `prefijo`, `ultimo`, `estado`) VALUES
+(1, 2026, 21, 'ACTIVO');
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
