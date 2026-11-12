@@ -64,6 +64,15 @@ $paginasContrato = [
 
 $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 
+// Páginas del menú Medidor
+$paginasMedidor = [
+    'medidor.php',
+    'lista-medidor.php',
+    'lista-medidores.php'
+];
+
+$menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -155,7 +164,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 
                         <li class="nav-item <?= $menuCantonActivo ? 'menu-open' : '' ?>">
                             <a href="#" class="nav-link <?= $menuCantonActivo ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-crosshair"></i>
                                 <p>
                                     Cantón
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -164,13 +173,13 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="canton.php" class="nav-link <?= $paginaActual == 'canton.php' ? 'active' : '' ?>">
-                                        <i class="nav-icon bi bi-record-circle-fill"></i>
+                                        <i class="nav-icon bi bi-file-earmark-plus"></i>
                                         <p>Nuevo</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="lista-cantones.php" class="nav-link <?= $paginaActual == 'lista-cantones.php' ? 'active' : '' ?>">
-                                        <i class="nav-icon bi bi-record-circle-fill"></i>
+                                        <i class="nav-icon bi bi-list"></i>
                                         <p>Consultar</p>
                                     </a>
                                 </li>
@@ -252,6 +261,24 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                         </li>
                         <li class="nav-item">
                             <a href="lista-contrato.php" class="nav-link <?= ($paginaActual == 'lista-contrato.php' || $paginaActual == 'lista-contratos.php') ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Consulta</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item <?= $menuMedidorActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuMedidorActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-compass"></i>
+                        <p>
+                            Medidor
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="medidor.php" class="nav-link <?= $paginaActual == 'medidor.php' ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Consulta</p>
                             </a>

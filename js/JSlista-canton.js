@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         paginationSizeSelector: [5, 10, 25, 50, 100],
         movableColumns: true,
         columns: [
-            { title: "ID", field: "idcanton", width: 90, hozAlign: "center" },
+            { title: "ID", field: "idcanton", visible: false },
             { title: "Nombre del Cantón", field: "nombre" },
             {
                 title: "Acciones",

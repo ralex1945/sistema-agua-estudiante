@@ -158,14 +158,14 @@
                       <div class="row">
                         <div class="col-12 col-md-6 col-lg-6">
                           <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="numero" name="numero" placeholder="" readonly />
+                            <input type="text" class="form-control" id="numero" name="numero" placeholder="" disabled />
                             <label for="numero">Número Contrato (*)</label>
                           </div>
                         </div>
 
                         <div class="col-12 col-md-6 col-lg-6">
                           <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="fecha" name="fecha" placeholder="" />
+                            <input type="date" class="form-control" id="fecha" name="fecha" max="<?php echo date('Y-m-d'); ?>" placeholder="" />
                             <label for="fecha">Fecha de Generación de Contrato (*)</label>
                           </div>
                         </div>

@@ -10,8 +10,28 @@ $monto = $_POST['monto'] ?? '';
 $idcontrato = $_POST['idcontrato'] ?? '';
 $opcion = isset($_REQUEST["opcion"]) ? $_REQUEST["opcion"] : "";
 
+if ($opcion == "generarNumero") {
+    require_once "../config/conexion.php";
+    $num = getNumeroContrato($conexion);
+    echo json_encode([
+        "estado" => true,
+        "numero" => $num
+    ]);
+    $conexion->close();
+    exit;
+}
+
 if ($opcion == "guardar") {
     require_once "../config/conexion.php";
+
+    $fechaHoy = date('Y-m-d');
+    if (!empty($fecha) && $fecha > $fechaHoy) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "La fecha de generación no puede ser una fecha futura"
+        ]);
+        exit;
+    }
 
     $prima = 0;
     $ncontrato = getNumeroContrato($conexion);
@@ -36,6 +56,15 @@ if ($opcion == "guardar") {
 }
 if ($opcion == "modificar") {
     require_once "../config/conexion.php";
+
+    $fechaHoy = date('Y-m-d');
+    if (!empty($fecha) && $fecha > $fechaHoy) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "La fecha de generación no puede ser una fecha futura"
+        ]);
+        exit;
+    }
 
     $idcontrato = !empty($_POST['idcontrato']) ? intval($_POST['idcontrato']) : 0;
     $idsocio = !empty($_POST['idsocio']) ? intval($_POST['idsocio']) : 0;
@@ -84,32 +113,42 @@ if ($opcion == "eliminar") {
     $conexion->close();
 }
 
-if ($opcion == "consultarDUI") {
+if ($opcion == "consultarDUISocio" || $opcion == "consultarDUI") {
     require_once "../config/conexion.php";
 
-    $sql = "SELECT dui FROM empleado WHERE dui=?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $dui);
+    $dui = $_POST['dui'] ?? '';
 
-    $stmt->execute();
+    try {
+        $sql = "SELECT idsocio, CONCAT(nombre, ' ', apellido) AS nombreCompleto FROM socio WHERE dui = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $dui);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
 
-    $resultado = $stmt->get_result();
-
-    if ($resultado->num_rows > 0) {
-
-        echo json_encode([
-            "estado" => true,
-            "mensaje" => "Este Dui ya existe"
-        ]);
-    } else {
+        if ($resultado->num_rows > 0) {
+            $fila = $resultado->fetch_assoc();
+            echo json_encode([
+                "estado" => true,
+                "datos" => [
+                    'idsocio' => $fila['idsocio'],
+                    'nombreCompleto' => $fila['nombreCompleto']
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "No existe"
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
         echo json_encode([
             "estado" => false,
-            "mensaje" => "a"
+            "mensaje" => $e->getMessage()
         ]);
     }
-
-    $stmt->close();
     $conexion->close();
+    exit;
 }
 
 if ($opcion == "consultar") {
@@ -202,6 +241,36 @@ if ($opcion == "consultarIndividual") {
 
     $stmt->close();
     $conexion->close();
+}
+
+if ($opcion == "consultarEmpleados") {
+    require_once "../config/conexion.php";
+
+    try {
+        $sql = "SELECT idempleado, CONCAT(nombre, ' ', apellido) as nombre FROM empleado ORDER BY nombre, apellido";
+        $resultado = $conexion->query($sql);
+
+        if (!$resultado) {
+            throw new Exception("Error al consultar los registros");
+        }
+
+        $empleados = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $empleados[] = [
+                'idempleado' => $fila['idempleado'],
+                'nombre' => $fila['nombre']
+            ];
+        }
+
+        echo json_encode($empleados, JSON_UNESCAPED_UNICODE);
+        $resultado->free();
+        $conexion->close();
+    } catch (Throwable $e) {
+        echo json_encode([
+            "mensaje" => "No se pudieron obtener los registros: " . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
+    exit;
 }
 
 if ($opcion == "consultarLectores") {

@@ -1,11 +1,16 @@
 function validarCampo(campo) {
     if (!campo) return true;
     const valor = campo.value.trim();
-    const vacio = valor === "" || valor === "[SELECCIONE]" || valor === "[SELECCIONE UN CARGO]" || valor === "[SELECCIONE UN CANTON]";
-    campo.classList.toggle("is-invalid", vacio);
-    campo.classList.toggle("is-valid", !vacio);
+    let esInvalido = valor === "" || valor === "[SELECCIONE]" || valor === "[SELECCIONE UN CARGO]" || valor === "[SELECCIONE UN CANTON]";
 
-    return !vacio;
+    if (!esInvalido && campo.id === "fecha" && campo.max && valor > campo.max) {
+        esInvalido = true;
+    }
+
+    campo.classList.toggle("is-invalid", esInvalido);
+    campo.classList.toggle("is-valid", !esInvalido);
+
+    return !esInvalido;
 }
 
 const formulario = document.getElementById("formulario");
@@ -33,6 +38,30 @@ if (formulario) {
             validarCampo(campo);
         });
     });
+
+    ////////////////FORMATO DE FECHA
+    // Evitar fechas futuras
+    if (fecha) {
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear();
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+        const dd = String(hoy.getDate()).padStart(2, '0');
+        fecha.max = `${yyyy}-${mm}-${dd}`;
+
+        fecha.addEventListener("change", function () {
+            if (this.value && this.max && this.value > this.max) {
+                this.value = this.max;
+                Swal.fire({
+                    icon: "warning",
+                    title: "Poseidón",
+                    text: "No se permiten fechas futuras para el contrato.",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+            validarCampo(this);
+        });
+    }
 
     ////////////////////PASAR TODO A MAYUSCULAS
     const campos1 = [cargo1, cargo2];
@@ -109,9 +138,14 @@ if (formulario) {
                     nombre.value = resultado.datos.nombreCompleto;
                     btnGuardar.disabled = false;
                     btnGuardar.dataset.id = resultado.datos.idsocio;
+                    validarCampo(dui);
+                    validarCampo(nombre);
                 } else {
                     nombre.value = "";
                     btnGuardar.disabled = true;
+                    btnGuardar.dataset.id = "";
+                    validarCampo(dui);
+                    validarCampo(nombre);
                     Swal.fire({
                         icon: "warning",
                         title: "Poseidón",
