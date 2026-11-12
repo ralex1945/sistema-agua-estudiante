@@ -10,6 +10,17 @@ $monto = $_POST['monto'] ?? '';
 $idcontrato = $_POST['idcontrato'] ?? '';
 $opcion = isset($_REQUEST["opcion"]) ? $_REQUEST["opcion"] : "";
 
+if ($opcion == "generarNumero") {
+    require_once "../config/conexion.php";
+    $num = getNumeroContrato($conexion);
+    echo json_encode([
+        "estado" => true,
+        "numero" => $num
+    ]);
+    $conexion->close();
+    exit;
+}
+
 if ($opcion == "guardar") {
     require_once "../config/conexion.php";
 
