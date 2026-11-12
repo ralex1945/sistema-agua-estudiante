@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors', 0);
 $dui = $_POST['dui'] ?? '';
 $nombre = isset($_REQUEST["nombre"]) ? $_REQUEST["nombre"] : "";
 $apellido = isset($_REQUEST["apellido"]) ? $_REQUEST["apellido"] : "";
@@ -237,6 +238,40 @@ if ($opcion == "consultarIndividual") {
         ]);
     }
     $conexion->close();
+}
+
+if ($opcion == "consultarEmpleados") {
+    require_once "../config/conexion.php";
+    try {
+        $sql = "SELECT e.idempleado, CONCAT(e.nombre, ' ', e.apellido) as nombre 
+                FROM empleado AS e 
+                ORDER BY e.nombre, e.apellido";
+
+        $resultado = $conexion->query($sql);
+
+        if (!$resultado) {
+            throw new Exception("Error al consultar los registros");
+        }
+
+        $empleados = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $empleados[] = [
+                'idempleado' => $fila['idempleado'],
+                'nombre' => $fila['nombre']
+            ];
+        }
+
+        echo json_encode($empleados, JSON_UNESCAPED_UNICODE);
+
+        $resultado->free();
+        $conexion->close();
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "No se pudieron obtener los registros"
+        ], JSON_UNESCAPED_UNICODE);
+    }
 }
 
 if ($opcion == "consultarLectores") {

@@ -200,7 +200,7 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
 
                 <li class="nav-item <?= $menuEmpleadoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuEmpleadoActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-people"></i>
+                        <i class="nav-icon bi bi-box-arrow-in-right"></i>
                         <p>
                             Empleado
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -278,7 +278,7 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
 
                 <li class="nav-item <?= $menuMedidorActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuMedidorActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-compass"></i>
+                        <i class="nav-icon bi bi-x-diamond"></i>
                         <p>
                             Medidor
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -296,7 +296,7 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
 
                 <li class="nav-item <?= $menuLecturaActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuLecturaActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-speedometer2"></i>
+                        <i class="nav-icon bi bi-calculator"></i>
                         <p>
                             Lectura
                             <i class="nav-arrow bi bi-chevron-right"></i>

@@ -10,7 +10,7 @@ $direccion = $_POST['direccion'] ?? '';
 $referencia = $_POST['referencia'] ?? '';
 $estado = $_POST['estado'] ?? '';
 
-$opcion = $_REQUEST['opcion'] ?? '';
+$opcion = $_POST['opcion'] ?? $_GET['opcion'] ?? '';
 
 if ($opcion == "consultarMedidor") {
     require_once "../config/conexion.php";
@@ -142,53 +142,36 @@ if ($opcion == "consultar") {
     require_once "../config/conexion.php";
 
     try {
-        $sql = "SELECT m.idmedidor, m.idcontrato, m.nmedidor, m.lectura_inicial, m.idcanton, m.idruta, m.direccion, m.referencia, m.estado,
-                       c.ncontrato, c.fecha, s.dui, s.nombre, s.apellido,
-                       can.nombre AS canton, r.nombre AS ruta
-                FROM medidor AS m
-                INNER JOIN contrato AS c ON m.idcontrato = c.idcontrato
-                INNER JOIN socio AS s ON c.idsocio = s.idsocio
-                LEFT JOIN canton AS can ON m.idcanton = can.idcanton
-                LEFT JOIN ruta AS r ON m.idruta = r.idruta
-                ORDER BY m.idmedidor ASC";
+        $sql = "SELECT m.idmedidor, s.dui, s.nombre, s.apellido, c.ncontrato, m.nmedidor, m.estado, ru.nombre as ruta
+        FROM contrato AS c
+        INNER JOIN socio AS s
+            ON s.idsocio = c.idsocio
+        INNER JOIN medidor AS m
+            ON m.idcontrato = c.idcontrato
+        INNER JOIN ruta AS ru
+            ON ru.idruta=m.idruta
+        ORDER BY c.ncontrato";
 
         $resultado = $conexion->query($sql);
 
         if (!$resultado) {
-            throw new Exception("Error al consultar los registros: " . $conexion->error);
+            throw new Exception("Error al consultar los registros");
         }
 
         $registros = [];
         $correlativo = 1;
 
         while ($fila = $resultado->fetch_assoc()) {
-            $registros[] = [
-                'idmedidor' => $fila['idmedidor'],
-                'idcontrato' => $fila['idcontrato'],
-                'ncontrato' => $fila['ncontrato'],
-                'nmedidor' => $fila['nmedidor'],
-                'dui' => $fila['dui'],
-                'nombre' => $fila['nombre'],
-                'apellido' => $fila['apellido'],
-                'cliente' => $fila['nombre'] . ' ' . $fila['apellido'],
-                'lectura_inicial' => $fila['lectura_inicial'],
-                'canton' => $fila['canton'] ?? '',
-                'ruta' => $fila['ruta'] ?? '',
-                'direccion' => $fila['direccion'],
-                'referencia' => $fila['referencia'],
-                'estado' => $fila['estado'],
-                'fecha' => !empty($fila['fecha']) ? date('d-m-Y', strtotime($fila['fecha'])) : '',
-                'correlativo' => $correlativo++
-            ];
+            //$empleados[] = $fila;
+            $fila['correlativo'] = $correlativo++;
+            $registros[] = $fila;
         }
 
-        echo json_encode($registros, JSON_UNESCAPED_UNICODE);
-        $resultado->free();
+        echo json_encode($registros);
     } catch (Throwable $e) {
         echo json_encode([
-            "estado" => false,
-            "mensaje" => "Error al obtener los registros: " . $e->getMessage()
-        ], JSON_UNESCAPED_UNICODE);
+            "mensaje" => "No se pudieron obtener los registros"
+        ]);
     }
     $conexion->close();
     exit;
