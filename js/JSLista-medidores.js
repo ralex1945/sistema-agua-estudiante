@@ -56,21 +56,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             { title: "N° Medidor", field: "nmedidor" },
             { title: "Ruta", field: "ruta" },
             {
-                title: "Estado", field: "estado", hozAlign: "center",
+                title: "Estado", field: "estado", hozAlign: "center", headerSort: false,
                 formatter: function (cell) {
-                    const estado = (cell.getValue() || "").toUpperCase();
-                    if (estado === "ACTIVO") {
-                        return `<span style="color: #198754; font-size: 1.25rem;" title="Activo">
+                    const asignado = cell.getValue();
+
+                    if (asignado === "ACTIVO") {
+                        return `<span style="color: green; font-size: 20px;" title="Activo">
                             <i class="bi bi-check-circle-fill"></i>
                         </span>`;
-                    } else if (estado === "SUSPENDIDO") {
-                        return `<span style="color: #ffc107; font-size: 1.25rem;" title="Suspendido">
-                            <i class="bi bi-x-circle-fill"></i>
-                        </span>`;
                     } else {
-                        return `<span style="color: #dc3545; font-size: 1.25rem;" title="Inactivo">
-                            <i class="bi bi-x-circle-fill"></i>
-                        </span>`;
+                        if (asignado === "SUSPENDIDO") {
+                            return `<span style="color: #FFC107; font-size: 20px;" title="Suspendido">
+                                <i class="bi bi-x-circle-fill" style="color: #FFC107;"></i>
+                            </span>`;
+                        } else {
+                            return `<span style="color: red; font-size: 20px;" title="Inactivo">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </span>`;
+                        }
                     }
                 }
             },
@@ -185,14 +188,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             throw new Error("Error HTTP: " + respuesta.status);
         }
 
-        const registros = await respuesta.json();
+        const empleados = await respuesta.json();
         Swal.close();
 
-        if (!Array.isArray(registros)) {
-            throw new Error(registros.mensaje || "Respuesta no válida");
+        if (!Array.isArray(empleados)) {
+            throw new Error(empleados.error || "Respuesta no válida");
         }
 
-        await tabla.replaceData(registros);
+        tabla.replaceData(empleados);
         actualizarContador();
 
     } catch (error) {
@@ -211,13 +214,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             tabla.setFilter([
                 [
-                    { field: "nmedidor", type: "like", value: valor },
-                    { field: "ncontrato", type: "like", value: valor },
                     { field: "dui", type: "like", value: valor },
                     { field: "nombre", type: "like", value: valor },
                     { field: "apellido", type: "like", value: valor },
-                    { field: "canton", type: "like", value: valor },
-                    { field: "ruta", type: "like", value: valor },
+                    { field: "ncontrato", type: "like", value: valor },
+                    { field: "nmedidor", type: "like", value: valor },
                     { field: "estado", type: "like", value: valor }
                 ]
             ]);
@@ -225,7 +226,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     btnImprimir?.addEventListener("click", () => {
-        window.print();
+        alert("Filtro: " + filtro.value);
     });
 });
 
