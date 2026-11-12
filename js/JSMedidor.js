@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (idContrato) {
         try {
             const datos = new FormData();
-            datos.append("opcion", "consultarContrato");
+            datos.append("opcion", "consultarMedidor");
             datos.append("idcontrato", idContrato);
 
             const respuesta = await fetch("DAOMedidor.php", {
@@ -118,23 +118,39 @@ document.addEventListener("DOMContentLoaded", async function () {
             });
 
             if (respuesta.ok) {
-                const res = await respuesta.json();
-                if (res.estado && res.datos) {
-                    if (dui) dui.value = res.datos.dui || "";
-                    if (nombre) nombre.value = res.datos.nombreCompleto || "";
-                    if (numero) numero.value = res.datos.ncontrato || "";
-                    if (fecha) fecha.value = res.datos.fecha || "";
-                    btnGuardar.dataset.idcontrato = res.datos.idcontrato;
+                const resultado = await respuesta.json();
+                if (resultado.estado && resultado.datos) {
+                    dui.value = resultado.datos.dui || "";
+                    nombre.value = resultado.datos.nombreCompleto || "";
+                    numero.value = resultado.datos.ncontrato || "";
+                    fecha.value = resultado.datos.fecha || "";
+                    canton.value = resultado.datos.idcanton || "0";
+                    ruta.value = resultado.datos.idruta || "0";
+                    direccion.value = resultado.datos.direccion || "";
+                    referencia.value = resultado.datos.referencia || "";
+                    nmedidor.value = resultado.datos.nmedidor || "";
+                    inicio.value = resultado.datos.lectura_inicial !== null ? resultado.datos.lectura_inicial : "";
+                    estado.value = resultado.datos.estado || "0";
+
+                    if (resultado.datos.nmedidor == null || resultado.datos.nmedidor === "") {
+                        btnGuardar.textContent = "Guardar";
+                        btnGuardar.dataset.id = idContrato;
+                        btnGuardar.disabled = false;
+                    } else {
+                        btnGuardar.textContent = "Modificar";
+                        btnGuardar.dataset.id = resultado.datos.idmedidor;
+                        btnGuardar.disabled = false;
+                    }
                 } else {
                     Swal.fire({
                         icon: "warning",
                         title: "Poseidón",
-                        text: res.mensaje || "No se encontró el contrato especificado."
+                        text: resultado.mensaje || "No se encontró el contrato especificado."
                     });
                 }
             }
         } catch (e) {
-            console.error("Error al consultar contrato:", e);
+            console.error("Error al consultar contrato/medidor:", e);
         }
     } else {
         Swal.fire({
@@ -144,7 +160,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // Botón Guardar
+    // Botón Guardar / Modificar
     if (btnGuardar) {
         btnGuardar.addEventListener("click", async function () {
             let valido = true;
@@ -163,20 +179,17 @@ document.addEventListener("DOMContentLoaded", async function () {
                 return;
             }
 
-            const idcontratoActual = btnGuardar.dataset.idcontrato || idContrato;
-            if (!idcontratoActual) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "No se tiene identificado el contrato para este medidor."
-                });
-                return;
-            }
+            const modoModificar = btnGuardar.textContent.trim() === "Modificar";
+            const opcion = modoModificar ? "modificar" : "guardar";
 
             try {
                 const datos = new FormData(formulario);
-                datos.append("opcion", "guardar");
-                datos.append("idcontrato", idcontratoActual);
+                datos.append("opcion", opcion);
+                if (modoModificar) {
+                    datos.append("idmedidor", btnGuardar.dataset.id);
+                } else {
+                    datos.append("idcontrato", btnGuardar.dataset.id || idContrato);
+                }
 
                 Swal.fire({
                     title: "Guardando...",

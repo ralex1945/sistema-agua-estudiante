@@ -12,15 +12,17 @@ $estado = $_POST['estado'] ?? '';
 
 $opcion = $_REQUEST['opcion'] ?? '';
 
-if ($opcion == "consultarContrato") {
+if ($opcion == "consultarMedidor") {
     require_once "../config/conexion.php";
 
     $idcontrato = !empty($_POST['idcontrato']) ? intval($_POST['idcontrato']) : 0;
 
     try {
-        $sql = "SELECT c.idcontrato, c.ncontrato, c.fecha, s.dui, CONCAT(s.nombre, ' ', s.apellido) AS nombreCompleto
+        $sql = "SELECT c.idcontrato, c.ncontrato, c.fecha, s.dui, CONCAT(s.nombre, ' ', s.apellido) AS nombreCompleto,
+                       m.idmedidor, m.nmedidor, m.lectura_inicial, m.idcanton, m.idruta, m.direccion, m.referencia, m.estado
                 FROM contrato AS c
                 INNER JOIN socio AS s ON c.idsocio = s.idsocio
+                LEFT JOIN medidor AS m ON c.idcontrato = m.idcontrato
                 WHERE c.idcontrato = ?";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("i", $idcontrato);
@@ -36,7 +38,15 @@ if ($opcion == "consultarContrato") {
                     "ncontrato" => $fila['ncontrato'],
                     "fecha" => $fila['fecha'],
                     "dui" => $fila['dui'],
-                    "nombreCompleto" => $fila['nombreCompleto']
+                    "nombreCompleto" => $fila['nombreCompleto'],
+                    "idmedidor" => $fila['idmedidor'],
+                    "nmedidor" => $fila['nmedidor'],
+                    "lectura_inicial" => $fila['lectura_inicial'],
+                    "idcanton" => $fila['idcanton'],
+                    "idruta" => $fila['idruta'],
+                    "direccion" => $fila['direccion'],
+                    "referencia" => $fila['referencia'],
+                    "estado" => $fila['estado']
                 ]
             ]);
         } else {
@@ -49,7 +59,7 @@ if ($opcion == "consultarContrato") {
     } catch (Throwable $e) {
         echo json_encode([
             "estado" => false,
-            "mensaje" => "Error al consultar contrato: " . $e->getMessage()
+            "mensaje" => "Error al consultar medidor: " . $e->getMessage()
         ]);
     }
     $conexion->close();
@@ -65,24 +75,6 @@ if ($opcion == "guardar") {
     $idruta = intval($idruta);
 
     try {
-        // Verificar si el contrato ya tiene un medidor asignado
-        $sqlCheck = "SELECT idmedidor FROM medidor WHERE idcontrato = ?";
-        $stmtCheck = $conexion->prepare($sqlCheck);
-        $stmtCheck->bind_param("i", $idcontrato);
-        $stmtCheck->execute();
-        $resCheck = $stmtCheck->get_result();
-
-        if ($resCheck->num_rows > 0) {
-            echo json_encode([
-                "estado" => false,
-                "mensaje" => "Este contrato ya tiene un medidor asignado"
-            ]);
-            $stmtCheck->close();
-            $conexion->close();
-            exit;
-        }
-        $stmtCheck->close();
-
         $sql = "INSERT INTO medidor (idcontrato, nmedidor, lectura_inicial, idcanton, idruta, direccion, referencia, estado)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
@@ -97,6 +89,42 @@ if ($opcion == "guardar") {
             echo json_encode([
                 "estado" => false,
                 "mensaje" => "Error al guardar el medidor: " . $stmt->error
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "Error en la base de datos: " . $e->getMessage()
+        ]);
+    }
+    $conexion->close();
+    exit;
+}
+
+if ($opcion == "modificar") {
+    require_once "../config/conexion.php";
+
+    $idmedidor = !empty($_POST['idmedidor']) ? intval($_POST['idmedidor']) : 0;
+    $lectura_inicial = intval($lectura_inicial);
+    $idcanton = intval($idcanton);
+    $idruta = intval($idruta);
+
+    try {
+        $sql = "UPDATE medidor SET nmedidor=?, lectura_inicial=?, idcanton=?, idruta=?, direccion=?, referencia=?, estado=?
+                WHERE idmedidor=?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("siissssi", $nmedidor, $lectura_inicial, $idcanton, $idruta, $direccion, $referencia, $estado, $idmedidor);
+
+        if ($stmt->execute()) {
+            echo json_encode([
+                "estado" => true,
+                "mensaje" => "Medidor Modificado Correctamente"
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "Error al modificar el medidor: " . $stmt->error
             ]);
         }
         $stmt->close();
