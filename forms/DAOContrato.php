@@ -24,6 +24,15 @@ if ($opcion == "generarNumero") {
 if ($opcion == "guardar") {
     require_once "../config/conexion.php";
 
+    $fechaHoy = date('Y-m-d');
+    if (!empty($fecha) && $fecha > $fechaHoy) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "La fecha de generación no puede ser una fecha futura"
+        ]);
+        exit;
+    }
+
     $prima = 0;
     $ncontrato = getNumeroContrato($conexion);
 
@@ -47,6 +56,15 @@ if ($opcion == "guardar") {
 }
 if ($opcion == "modificar") {
     require_once "../config/conexion.php";
+
+    $fechaHoy = date('Y-m-d');
+    if (!empty($fecha) && $fecha > $fechaHoy) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "La fecha de generación no puede ser una fecha futura"
+        ]);
+        exit;
+    }
 
     $idcontrato = !empty($_POST['idcontrato']) ? intval($_POST['idcontrato']) : 0;
     $idsocio = !empty($_POST['idsocio']) ? intval($_POST['idsocio']) : 0;

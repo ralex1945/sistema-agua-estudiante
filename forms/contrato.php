@@ -165,7 +165,7 @@
 
                         <div class="col-12 col-md-6 col-lg-6">
                           <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="fecha" name="fecha" placeholder="" />
+                            <input type="date" class="form-control" id="fecha" name="fecha" max="<?php echo date('Y-m-d'); ?>" placeholder="" />
                             <label for="fecha">Fecha de Generación de Contrato (*)</label>
                           </div>
                         </div>
