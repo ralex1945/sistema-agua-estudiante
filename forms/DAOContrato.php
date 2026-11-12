@@ -167,7 +167,7 @@ ON s.idsocio = c.idsocio LEFT JOIN medidor as m ON m.idcontrato= c.idcontrato;";
         }
 
         $registros = [];
-        $correlativo = 0;
+        $correlativo = 1;
 
         while ($fila = $resultado->fetch_assoc()) {
             //$empleados[] = $fila;

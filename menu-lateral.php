@@ -73,6 +73,14 @@ $paginasMedidor = [
 
 $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
 
+// Páginas del menú Lectura
+$paginasLectura = [
+    'lectura.php',
+    'lista-lecturas.php'
+];
+
+$menuLecturaActivo = in_array($paginaActual, $paginasLectura);
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -255,13 +263,13 @@ $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="contrato.php" class="nav-link <?= $paginaActual == 'contrato.php' ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-person-plus"></i>
                                 <p>Nuevo</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="lista-contrato.php" class="nav-link <?= ($paginaActual == 'lista-contrato.php' || $paginaActual == 'lista-contratos.php') ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-list"></i>
                                 <p>Consulta</p>
                             </a>
                         </li>
@@ -278,9 +286,27 @@ $menuMedidorActivo = in_array($paginaActual, $paginasMedidor);
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="medidor.php" class="nav-link <?= $paginaActual == 'medidor.php' ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                            <a href="lista-medidores.php" class="nav-link <?= ($paginaActual == 'lista-medidores.php' || $paginaActual == 'lista-medidor.php') ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
                                 <p>Consulta</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item <?= $menuLecturaActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuLecturaActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-speedometer2"></i>
+                        <p>
+                            Lectura
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="lectura.php" class="nav-link <?= $paginaActual == 'lectura.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Nuevo</p>
                             </a>
                         </li>
                     </ul>

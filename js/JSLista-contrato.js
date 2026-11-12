@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         paginationSizeSelector: [10, 25, 50, 100],
         movableColumns: true,
         columns: [
-            { title: "corr", field: "correlativo", visible: false },
+            { title: "Corr.", field: "correlativo" },
             { title: "ID", field: "idcontrato", visible: false },
             { title: "DUI", field: "dui" },
             { title: "Nombre", field: "nombre" },
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             { title: "Monto ($)", field: "monto", hozAlign: "right" },
 
             {
-                title: "Tiene Medidor?", field: "asignado", hozAlign: "center", headerSort: false,
+                title: "Tiene Medidor?", field: "asignado", hozAlign: "center",
                 formatter: function (cell) {
                     const asignado = cell.getValue();
                     if (asignado === "Asignado") {
