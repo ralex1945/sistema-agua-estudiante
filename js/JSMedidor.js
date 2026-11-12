@@ -227,10 +227,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    // Botón Cancelar
-    if (btnCancelar) {
-        btnCancelar.addEventListener("click", function () {
-            window.location.href = "lista-contrato.php";
-        });
-    }
+    //////////////////////////////////BOTON CANCELAR/////
+
+    btnCancelar.addEventListener("click", function () {
+        window.location.href = "lista-contrato.php";
+    });
 });
+
