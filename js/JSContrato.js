@@ -109,9 +109,14 @@ if (formulario) {
                     nombre.value = resultado.datos.nombreCompleto;
                     btnGuardar.disabled = false;
                     btnGuardar.dataset.id = resultado.datos.idsocio;
+                    validarCampo(dui);
+                    validarCampo(nombre);
                 } else {
                     nombre.value = "";
                     btnGuardar.disabled = true;
+                    btnGuardar.dataset.id = "";
+                    validarCampo(dui);
+                    validarCampo(nombre);
                     Swal.fire({
                         icon: "warning",
                         title: "Poseidón",

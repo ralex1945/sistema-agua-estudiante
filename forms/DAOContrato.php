@@ -95,32 +95,42 @@ if ($opcion == "eliminar") {
     $conexion->close();
 }
 
-if ($opcion == "consultarDUI") {
+if ($opcion == "consultarDUISocio" || $opcion == "consultarDUI") {
     require_once "../config/conexion.php";
 
-    $sql = "SELECT dui FROM empleado WHERE dui=?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $dui);
+    $dui = $_POST['dui'] ?? '';
 
-    $stmt->execute();
+    try {
+        $sql = "SELECT idsocio, CONCAT(nombre, ' ', apellido) AS nombreCompleto FROM socio WHERE dui = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $dui);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
 
-    $resultado = $stmt->get_result();
-
-    if ($resultado->num_rows > 0) {
-
-        echo json_encode([
-            "estado" => true,
-            "mensaje" => "Este Dui ya existe"
-        ]);
-    } else {
+        if ($resultado->num_rows > 0) {
+            $fila = $resultado->fetch_assoc();
+            echo json_encode([
+                "estado" => true,
+                "datos" => [
+                    'idsocio' => $fila['idsocio'],
+                    'nombreCompleto' => $fila['nombreCompleto']
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                "estado" => false,
+                "mensaje" => "No existe"
+            ]);
+        }
+        $stmt->close();
+    } catch (Throwable $e) {
         echo json_encode([
             "estado" => false,
-            "mensaje" => "a"
+            "mensaje" => $e->getMessage()
         ]);
     }
-
-    $stmt->close();
     $conexion->close();
+    exit;
 }
 
 if ($opcion == "consultar") {
