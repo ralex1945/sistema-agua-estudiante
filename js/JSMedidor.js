@@ -153,11 +153,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.error("Error al consultar contrato/medidor:", e);
         }
     } else {
-        Swal.fire({
-            icon: "info",
-            title: "Poseidón",
-            text: "Seleccione un contrato desde la lista para asignarle medidor."
-        });
+        // En el video no muestra alerta si se entra directamente
     }
 
     // Botón Guardar / Modificar
