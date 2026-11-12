@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,7 +23,6 @@
   <!--end::Primary Meta Tags-->
 
   <!--begin::Accessibility Features-->
-  <!-- Skip links will be dynamically added by accessibility.js -->
   <meta name="supported-color-schemes" content="light dark" />
   <link rel="preload" href="../css/adminlte.css" as="style" />
   <!--end::Accessibility Features-->
@@ -57,132 +56,75 @@
     <main class="app-main">
       <div class="app-content-header">
         <div class="container-fluid">
-          <div class="row">
-          </div>
+          <div class="row"></div>
         </div>
       </div>
       <div class="app-content">
         <div class="container-fluid">
-          <form id="formulario" name="formulario" method="POST" action="#">
-            <div class="row g-4">
 
-              <!-- Columna Izquierda: Datos del Empleado -->
-              <div class="col-md-6">
+          <div class="row">
+            <!-- Primer formulario -->
+            <div class="col-3 col-md-3 col-lg-3"></div>
+            <div class="col-12 col-md-12 col-lg-6">
+              <form id="formulario" name="formulario" method="POST" autocomplete="off">
                 <div class="card card-secondary card-outline mb-4">
                   <div class="card-header">
-                    <div class="card-title">Datos del Empleado</div>
+                    <div class="card-title">Datos del Socio</div>
                   </div>
+
                   <div class="card-body">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="dui" name="dui" placeholder="" maxlength="10" />
                       <label for="dui">DUI(*)</label>
                     </div>
+
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" />
                       <label for="nombre">Nombre(*)</label>
                     </div>
+
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="apellido" name="apellido" placeholder="" />
                       <label for="apellido">Apellido(*)</label>
                     </div>
+
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="telefono" name="telefono" placeholder="" />
+                      <input type="text" class="form-control" id="telefono" name="telefono" placeholder="" maxlength="9" />
                       <label for="telefono">Teléfono(*)</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="isss" name="isss" placeholder="" />
-                      <label for="isss">N° ISSS</label>
+                      <input type="text" class="form-control" id="profesion" name="profesion" placeholder="" />
+                      <label for="profesion">Profesión / Oficio(*)</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <select class="form-select" id="afp" name="afp" aria-label="Seleccione la AFP">
-                        <option value="" selected>[SELECCIONE]</option>
-                        <option value="CRECER">AFP CRECER</option>
-                        <option value="CONFIA">AFP CONFIA</option>
+                      <input type="text" class="form-control" id="nit" name="nit" placeholder="" maxlength="17" />
+                      <label for="nit">NIT(*)</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="date" class="form-control" id="fecha" name="fecha" placeholder="" />
+                      <label for="fecha">Fecha de Nacimiento(*)</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <select class="form-select" id="canton" name="canton">
+                        <option value="">[SELECCIONE UN CANTON]</option>
                       </select>
-                      <label for="afp">Seleccione la AFP</label>
+                      <label for="canton">Dirección del Socio(*)</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="nup" name="nup" placeholder="" />
-                      <label for="nup">NUP</label>
+                      <textarea class="form-control" id="direccion" name="direccion"></textarea>
+                      <label for="direccion">Dirección de Referencia(*)</label>
+                    </div>
+                    <div class="card-footer">
+                      <button type="button" class="btn btn-primary" id="btnGuardar">
+                        Guardar
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <!-- Columna Derecha: Otros Datos -->
-              <div class="col-md-6">
-                <div class="card card-secondary card-outline mb-4">
-                  <div class="card-header">
-                    <div class="card-title">Otros Datos</div>
-                  </div>
-                  <div class="card-body">
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="renta" name="renta" aria-label="Seleccione la RENTA">
-                        <option value="" selected>[SELECCIONE]</option><!-- MODIFICAR DESPUES -->
-                        <option value="SI">APLICA RENTA (SI)</option>
-                        <option value="NO">NO APLICA (NO)</option>
-                      </select>
-                      <label for="renta">Seleccione la RENTA (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="sueldo" name="sueldo" placeholder="" />
-                      <label for="sueldo">Sueldo ($)(*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="cargo" name="cargo" aria-label="Cargo del empleado">
-                        <option value="" selected>[SELECCIONE UN CARGO]</option>
-                        <?php
-                        require_once "../config/conexion.php";
-                        $resCargos = $conexion->query("SELECT idcargo, nombre FROM cargo ORDER BY nombre ASC");
-                        if ($resCargos) {
-                          while ($filaCargo = $resCargos->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($filaCargo['idcargo']) . '">' . htmlspecialchars($filaCargo['nombre']) . '</option>';
-                          }
-                        }
-                        ?>
-                      </select>
-                      <label for="cargo">Cargo del empleado (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="canton" name="canton" aria-label="Donde vive el empleado">
-                        <option value="" selected>[SELECCIONE UN CANTON]</option>
-                        <?php
-                        $resCantones = $conexion->query("SELECT idcanton, nombre FROM canton ORDER BY nombre ASC");
-                        if ($resCantones) {
-                          while ($filaCanton = $resCantones->fetch_assoc()) {
-                            echo '<option value="' . htmlspecialchars($filaCanton['idcanton']) . '">' . htmlspecialchars($filaCanton['nombre']) . '</option>';
-                          }
-                        }
-                        ?>
-                      </select>
-                      <label for="canton">Donde vive el empleado (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <select class="form-select" id="estado" name="estado" aria-label="Seleccione Estado">
-                        <option value="" selected>[SELECCIONE]</option>
-                        <option value="ACTIVO">ACTIVO</option>
-                        <option value="INACTIVO">INACTIVO</option>
-                      </select>
-                      <label for="estado">Seleccione Estado (*)</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                      <input type="date" class="form-control" id="fecha_ingreso" name="fecha_ingreso" placeholder="dd/mm/aaaa" />
-                      <label for="fecha_ingreso">Fecha de ingreso(*)</label>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <button type="button" class="btn btn-success" id="btnGuardar">
-                      Guardar
-                    </button>
-                    <button type="button" class="btn btn-primary float-end" id="btnCancelar">
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              </div>
-
+              </form>
             </div>
-          </form>
+          </div>
+          <!-- Segundo formulario / panel -->
         </div>
       </div>
     </main>
@@ -207,7 +149,7 @@
   <!--begin::OverlayScrollbars Configure-->
   <script src="../js/para-el-menu.js"></script>
   <!--end::OverlayScrollbars Configure-->
-  <script src="../js/JSempleado.js?v=<?php echo filemtime('../js/JSempleado.js'); ?>"></script>
+  <script src="../js/JSSocio.js?v=<?php echo filemtime('../js/JSSocio.js'); ?>"></script>
 </body>
 
 </html>

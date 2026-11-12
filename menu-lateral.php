@@ -41,7 +41,8 @@ $menuConfiguracionActivo = in_array(
 // Páginas del menú Empleado
 $paginasEmpleado = [
     'empleado.php',
-    'lista-empleados.php'
+    'lista-empleados.php',
+    'asignarRuta.php'
 ];
 
 $menuEmpleadoActivo = in_array($paginaActual, $paginasEmpleado);
@@ -57,6 +58,7 @@ $menuSocioActivo = in_array($paginaActual, $paginasSocio);
 // Páginas del menú Contrato
 $paginasContrato = [
     'contrato.php',
+    'lista-contrato.php',
     'lista-contratos.php'
 ];
 
@@ -181,7 +183,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 
                 <li class="nav-item <?= $menuEmpleadoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuEmpleadoActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                        <i class="nav-icon bi bi-people"></i>
                         <p>
                             Empleado
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -200,12 +202,18 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                                 <p>Consulta</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="asignarRuta.php" class="nav-link <?= $paginaActual == 'asignarRuta.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Asignar Ruta</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
                 <li class="nav-item <?= $menuSocioActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuSocioActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-people"></i>
+                        <i class="nav-icon bi bi-person"></i>
                         <p>
                             Socio
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -214,13 +222,13 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="socio.php" class="nav-link <?= $paginaActual == 'socio.php' ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-person-plus"></i>
                                 <p>Nuevo</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="lista-socios.php" class="nav-link <?= $paginaActual == 'lista-socios.php' ? 'active' : '' ?>">
-                                <i class="nav-icon bi bi-circle"></i>
+                            <a href="lista-socio.php" class="nav-link <?= $paginaActual == 'lista-socio.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
                                 <p>Consulta</p>
                             </a>
                         </li>
@@ -229,7 +237,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
 
                 <li class="nav-item <?= $menuContratoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuContratoActivo ? 'active' : '' ?>">
-                        <i class="nav-icon bi bi-file-earmark-check"></i>
+                        <i class="nav-icon bi bi-check2-square"></i>
                         <p>
                             Contrato
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -243,7 +251,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="lista-contratos.php" class="nav-link <?= $paginaActual == 'lista-contratos.php' ? 'active' : '' ?>">
+                            <a href="lista-contrato.php" class="nav-link <?= ($paginaActual == 'lista-contrato.php' || $paginaActual == 'lista-contratos.php') ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Consulta</p>
                             </a>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,6 +23,7 @@
   <!--end::Primary Meta Tags-->
 
   <!--begin::Accessibility Features-->
+  <!-- Skip links will be dynamically added by accessibility.js -->
   <meta name="supported-color-schemes" content="light dark" />
   <link rel="preload" href="../css/adminlte.css" as="style" />
   <!--end::Accessibility Features-->
@@ -67,28 +68,31 @@
             <div class="col-3 col-md-3 col-lg-3"></div>
 
             <div class="col-12 col-md-6 col-lg-6">
-              <form id="formulario" name="formulario" method="POST" action="#">
+              <form id="formulario" name="formulario" method="POST" action="#" autocomplete="off">
                 <div class="card card-secondary card-outline mb-4">
                   <div class="card-header">
-                    <div class="card-title">Registro de Cargo</div>
+                    <div class="card-title">Ruta</div>
                   </div>
                   <div class="card-body">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Cargo" maxlength="50" required />
-                      <label for="nombre">Nombre del Cargo (*)</label>
+                      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" />
+                      <label for="nombre">Nombre</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Zona de cobertura, calles, avenidas colonias, etc" style="height: 80px;"></textarea>
+                      <label for="descripcion">Zona de cobertura, calles, avenidas colonias, etc</label>
                     </div>
                   </div>
                   <div class="card-footer">
-                    <button type="button" class="btn btn-primary" id="btnGuardar">
+             
+                  <button type="button" class="btn btn-primary" id="btnGuardar">
                       Guardar
-                    </button>
-                    <button type="button" class="btn btn-secondary float-end" id="btnCancelar">
-                      Cancelar
                     </button>
                   </div>
                 </div>
               </form>
             </div>
+
 
           </div>
         </div>
@@ -115,7 +119,7 @@
   <!--begin::OverlayScrollbars Configure-->
   <script src="../js/para-el-menu.js"></script>
   <!--end::OverlayScrollbars Configure-->
-  <script src="../js/JScargo.js?v=<?php echo file_exists('../js/JScargo.js') ? filemtime('../js/JScargo.js') : time(); ?>"></script>
+  <script src="../js/JSruta.js?v=<?php echo filemtime('../js/JSruta.js'); ?>"></script>
 </body>
 
 </html>

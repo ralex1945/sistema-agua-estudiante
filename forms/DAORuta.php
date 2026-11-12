@@ -139,3 +139,45 @@ if ($opcion == "consultarIndividual") {
     $conexion->close();
     exit;
 }
+
+if ($opcion == "consultarRutas") {
+    $idempleado = $_POST['idempleado'] ?? '';
+    require_once "../config/conexion.php";
+
+    try {
+        $sql = "SELECT r.idruta, r.nombre, er.idempleado_ruta 
+                FROM ruta AS r 
+                INNER JOIN empleado_ruta AS er ON r.idruta = er.idruta 
+                WHERE er.idempleado = ? 
+                ORDER BY r.nombre";
+
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $idempleado);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+        $rutas = [];
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $rutas[] = [
+                'idempleado_ruta' => $fila['idempleado_ruta'],
+                'nombre' => $fila['nombre']
+            ];
+        }
+
+        echo json_encode([
+            'estado' => true,
+            'datos' => $rutas
+        ], JSON_UNESCAPED_UNICODE);
+
+        $resultado->free();
+        $stmt->close();
+        $conexion->close();
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "No se pudieron obtener los registros"
+        ], JSON_UNESCAPED_UNICODE);
+    }
+}

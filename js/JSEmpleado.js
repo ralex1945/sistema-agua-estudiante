@@ -18,54 +18,23 @@ const apellido = document.getElementById("apellido");
 const telefono = document.getElementById("telefono");
 const isss = document.getElementById("isss");
 const afp = document.getElementById("afp");
-const nup = document.getElementById("nup");
+const nafp = document.getElementById("nafp");
 const renta = document.getElementById("renta");
 const sueldo = document.getElementById("sueldo");
 const cargo = document.getElementById("cargo");
 const canton = document.getElementById("canton");
 const estado = document.getElementById("estado");
-const fecha_ingreso = document.getElementById("fecha_ingreso");
+const fecha = document.getElementById("fecha");
 
-const camposObligatorios = [
-    dui,
-    nombre,
-    apellido,
-    telefono,
-    renta,
-    sueldo,
-    cargo,
-    canton,
-    estado,
-    fecha_ingreso
-];
-
-const todosLosCampos = [
-    dui,
-    nombre,
-    apellido,
-    telefono,
-    isss,
-    afp,
-    nup,
-    renta,
-    sueldo,
-    cargo,
-    canton,
-    estado,
-    fecha_ingreso
-];
+const campos = [dui, nombre, apellido, telefono, sueldo, fecha];
 
 if (formulario) {
-    ////////////////////VALIDACION DE CAMPOS OBLIGATORIOS
-    camposObligatorios.forEach(function (campo) {
-        if (campo) {
-            campo.addEventListener("blur", function () {
-                validarCampo(campo);
-            });
-            campo.addEventListener("change", function () {
-                validarCampo(campo);
-            });
-        }
+    ////////////////////VALIDACION DE CAMPOS VACIOS
+
+    campos.forEach(function (campo) {
+        campo.addEventListener("blur", function () {
+            validarCampo(campo);
+        });
     });
 
     ////////////////////PASAR TODO A MAYUSCULAS
@@ -98,6 +67,22 @@ if (formulario) {
             valor = valor.substring(0, 4) + "-" + valor.substring(4);
         }
         telefono.value = valor;
+    });
+
+    sueldo.addEventListener("input", function () {
+        let valor = this.value.replace(/[^0-9.]/g, "");
+
+        const partes = valor.split(".");
+        if (partes.length > 2) {
+            valor = partes[0] + "." + partes.slice(1).join("");
+        }
+
+        const posicion = valor.indexOf(".");
+        if (posicion !== -1) {
+            valor = valor.substring(0, posicion + 3);
+        }
+
+        this.value = valor;
     });
 
     ////////////////////BUSQUEDA DE DUI- PARA REPERIDOS/////////
@@ -151,16 +136,30 @@ if (formulario) {
     });
 
     btnGuardar.addEventListener("click", async function () {
-        // Validar únicamente los campos obligatorios
-        let formularioValido = true;
-        camposObligatorios.forEach(function (campo) {
-            if (campo && !validarCampo(campo)) {
-                formularioValido = false;
-            }
-        });
+        const duiValido = validarCampo(dui);
+        const nombreValido = validarCampo(nombre);
+        const apellidoValido = validarCampo(apellido);
+        const telefonoValido = validarCampo(telefono);
+        const sueldoValido = validarCampo(sueldo);
+        const fechaValido = validarCampo(fecha);
 
-        // Si falta algún campo obligatorio, mostramos alerta y no continúa
-        if (!formularioValido) {
+        const cantonValido = canton.value !== "0" && canton.value !== "";
+        canton.classList.toggle("is-invalid", !cantonValido);
+        canton.classList.toggle("is-valid", cantonValido);
+
+        const cargoValido = cargo.value !== "0" && cargo.value !== "";
+        cargo.classList.toggle("is-invalid", !cargoValido);
+        cargo.classList.toggle("is-valid", cargoValido);
+
+        const rentaValido = renta.value !== "0" && renta.value !== "";
+        renta.classList.toggle("is-invalid", !rentaValido);
+        renta.classList.toggle("is-valid", rentaValido);
+
+        const estadoValido = estado.value !== "0" && estado.value !== "";
+        estado.classList.toggle("is-invalid", !estadoValido);
+        estado.classList.toggle("is-valid", estadoValido);
+
+        if (!(duiValido && nombreValido && apellidoValido && telefonoValido && sueldoValido && fechaValido && cantonValido && cargoValido && rentaValido && estadoValido)) {
             Swal.fire({
                 icon: "warning",
                 title: "Campos incompletos",
@@ -250,7 +249,7 @@ if (formulario) {
 }
 ///////////////////LIMPIAR TODOS LOS CAMPOS///////////
 function limpiarCampos() {
-    todosLosCampos.forEach(function (campo) {
+    [dui, nombre, apellido, telefono, isss, afp, nafp, renta, sueldo, cargo, canton, estado, fecha].forEach(function (campo) {
         if (campo) {
             campo.value = "";
             campo.classList.remove("is-invalid");
@@ -261,7 +260,71 @@ function limpiarCampos() {
 
 //////////PROCESA AL TERMINAR DE CARGAR LA PAGINA
 document.addEventListener("DOMContentLoaded", async () => {
-    // Obtener el ID de la URL
+    try {
+        const datos = new FormData();
+        datos.append("opcion", "consultar");
+
+        const respuesta = await fetch("DAOCargo.php", {
+            method: "POST",
+            body: datos
+        });
+
+        if (!respuesta.ok) {
+            console.error(respuesta.status);
+            throw new Error("Error HTTP: " + respuesta.status);
+        }
+
+        const resultado = await respuesta.json();
+
+        const selectCargo = document.getElementById("cargo");
+
+        selectCargo.innerHTML = '<option value="0">[SELECCIONE UN CARGO]</option>'
+
+        resultado.forEach(cargo => {
+            const opcion = document.createElement("option");
+            opcion.value = cargo.idcargo;
+            opcion.textContent = cargo.nombre
+
+            selectCargo.appendChild(opcion);
+        });
+
+    } catch (error) {
+        Swal.close();
+    }
+
+    try {
+        const datos = new FormData();
+        datos.append("opcion", "consultar");
+
+        const respuesta = await fetch("DAOCanton.php", {
+            method: "POST",
+            body: datos
+        });
+
+        if (!respuesta.ok) {
+            console.error(respuesta.status);
+            throw new Error("Error HTTP: " + respuesta.status);
+        }
+
+        const resultado = await respuesta.json();
+
+        const selectCanton = document.getElementById("canton");
+
+        selectCanton.innerHTML = '<option value="0">[SELECCIONE UN CANTON]</option>'
+
+        resultado.forEach(canton => {
+            const opcion = document.createElement("option");
+            opcion.value = canton.idcanton;
+            opcion.textContent = canton.nombre;
+
+            selectCanton.appendChild(opcion);
+        });
+
+    } catch (error) {
+        Swal.close();
+    }
+
+    // 3. Obtener el ID de la URL (después de que los selects ya están cargados)
     const parametros = new URLSearchParams(window.location.search);
     const idempleado = parametros.get("id");
 
@@ -291,7 +354,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const resultado = await respuesta.json();
 
-
             // Cerrar el mensaje de espera
             Swal.close();
 
@@ -300,6 +362,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 nombre.value = resultado.datos.nombre;
                 apellido.value = resultado.datos.apellido;
                 telefono.value = resultado.datos.telefono;
+                fecha.value = resultado.datos.fecha_ingreso;
+                isss.value = resultado.datos.n_isss;
+                afp.value = resultado.datos.afp;
+                nafp.value = resultado.datos.nup;
+                sueldo.value = resultado.datos.sueldo;
+                cargo.value = resultado.datos.idcargo;
+                renta.value = resultado.datos.renta;
+                canton.value = resultado.datos.idcanton;
+                estado.value = resultado.datos.estado;
 
                 btnGuardar.textContent = "Modificar";
                 btnGuardar.dataset.id = resultado.datos.idempleado;
@@ -310,6 +381,4 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-
 });
-

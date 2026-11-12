@@ -17,7 +17,7 @@
   <!--end::Accessibility Meta Tags-->
 
   <!--begin::Primary Meta Tags-->
-  <meta name="title" content="Sistema de Agua - POSEIDÓN" />  
+  <meta name="title" content="Sistema de Agua - POSEIDÓN" />
   <meta name="description" content="Sistema Administrativo y Financiero de Agua" />
   <meta name="keywords" content="bootstrap 5, poseidon, agua potable, Sistema Administrativo y Financiero de Agua" />
   <!--end::Primary Meta Tags-->
@@ -42,7 +42,11 @@
   <!--begin::Required Plugin(AdminLTE)-->
   <link rel="stylesheet" href="../css/adminlte.css" />
   <!--end::Required Plugin(AdminLTE)-->
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.6.1/dist/css/tabulator_bootstrap5.min.css" crossorigin="anonymous" />
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -62,32 +66,32 @@
       </div>
       <div class="app-content">
         <div class="container-fluid">
-          <div class="row g-4">
-            <!-- Floating labels -->
-            <div class="col-3 col-md-3 col-lg-3"></div>
-
-            <div class="col-12 col-md-6 col-lg-6">
-              <form id="formulario" name="formulario" method="POST" action="#">
-                <div class="card card-secondary card-outline mb-4">
-                  <div class="card-header">
-                    <div class="card-title">Registro de Cantón</div>
-                  </div>
-                  <div class="card-body">
-                    <div class="form-floating mb-3">
-                      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del Cantón" maxlength="50" required />
-                      <label for="nombre">Nombre del Cantón (*)</label>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <button type="button" class="btn btn-primary" id="btnGuardar">
-                      Guardar
-                    </button>
-                    <button type="button" class="btn btn-secondary float-end" id="btnCancelar">
-                      Cancelar
-                    </button>
-                  </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Lista de Socios</h3>
+              <div class="card-tools">
+                <div class="input-group input-group-sm" style="width: 16rem">
+                  <span class="input-group-text">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                  </span>
+                  <input id="table-filter" type="search" class="form-control" placeholder="Filtrar por&hellip;" aria-label="Filtrar por..." />
                 </div>
-              </form>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex gap-2 mb-3">
+                <button id="print-table" type="button" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-printer me-1" aria-hidden="true"></i>
+                  Imprimir
+                </button>
+              </div>
+              <div id="users-table" aria-label="Socios"></div>
+
+              <div class="mt-2 text-end">
+                <strong id="total-registros">Total de socios: 0</strong>
+              </div>
+
+              <div id="table-pagination" class="d-flex flex-wrap gap-2 justify-content-end mt-2"></div>
             </div>
 
           </div>
@@ -100,14 +104,13 @@
     ?>
     <!--end::Footer-->
   </div>
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
-  <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.16.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
-  <!--end::Third Party Plugin(OverlayScrollbars)-->
   <!--begin::Required Plugin(popperjs for Bootstrap 5)-->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous">
+  </script>
   <!--end::Required Plugin(popperjs for Bootstrap 5)-->
   <!--begin::Required Plugin(Bootstrap 5)-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous">
+  </script>
   <!--end::Required Plugin(Bootstrap 5)-->
   <!--begin::Required Plugin(AdminLTE)-->
   <script src="../js/adminlte.js"></script>
@@ -115,7 +118,10 @@
   <!--begin::OverlayScrollbars Configure-->
   <script src="../js/para-el-menu.js"></script>
   <!--end::OverlayScrollbars Configure-->
-  <script src="../js/JScanton.js?v=<?php echo file_exists('../js/JScanton.js') ? filemtime('../js/JScanton.js') : time(); ?>"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.6.1/dist/js/tabulator.min.js" crossorigin="anonymous"></script>
+
+  <script src="../js/JSlista-socio.js?v=<?php echo file_exists('../js/JSlista-socio.js') ? filemtime('../js/JSlista-socio.js') : time(); ?>"></script>
 </body>
 
 </html>
