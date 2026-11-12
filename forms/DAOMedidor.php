@@ -138,3 +138,59 @@ if ($opcion == "modificar") {
     exit;
 }
 
+if ($opcion == "consultar") {
+    require_once "../config/conexion.php";
+
+    try {
+        $sql = "SELECT m.idmedidor, m.idcontrato, m.nmedidor, m.lectura_inicial, m.idcanton, m.idruta, m.direccion, m.referencia, m.estado,
+                       c.ncontrato, c.fecha, s.dui, s.nombre, s.apellido,
+                       can.nombre AS canton, r.nombre AS ruta
+                FROM medidor AS m
+                INNER JOIN contrato AS c ON m.idcontrato = c.idcontrato
+                INNER JOIN socio AS s ON c.idsocio = s.idsocio
+                LEFT JOIN canton AS can ON m.idcanton = can.idcanton
+                LEFT JOIN ruta AS r ON m.idruta = r.idruta
+                ORDER BY m.idmedidor ASC";
+
+        $resultado = $conexion->query($sql);
+
+        if (!$resultado) {
+            throw new Exception("Error al consultar los registros: " . $conexion->error);
+        }
+
+        $registros = [];
+        $correlativo = 1;
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $registros[] = [
+                'idmedidor' => $fila['idmedidor'],
+                'idcontrato' => $fila['idcontrato'],
+                'ncontrato' => $fila['ncontrato'],
+                'nmedidor' => $fila['nmedidor'],
+                'dui' => $fila['dui'],
+                'nombre' => $fila['nombre'],
+                'apellido' => $fila['apellido'],
+                'cliente' => $fila['nombre'] . ' ' . $fila['apellido'],
+                'lectura_inicial' => $fila['lectura_inicial'],
+                'canton' => $fila['canton'] ?? '',
+                'ruta' => $fila['ruta'] ?? '',
+                'direccion' => $fila['direccion'],
+                'referencia' => $fila['referencia'],
+                'estado' => $fila['estado'],
+                'fecha' => !empty($fila['fecha']) ? date('d-m-Y', strtotime($fila['fecha'])) : '',
+                'correlativo' => $correlativo++
+            ];
+        }
+
+        echo json_encode($registros, JSON_UNESCAPED_UNICODE);
+        $resultado->free();
+    } catch (Throwable $e) {
+        echo json_encode([
+            "estado" => false,
+            "mensaje" => "Error al obtener los registros: " . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
+    $conexion->close();
+    exit;
+}
+
