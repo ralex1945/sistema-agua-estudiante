@@ -58,6 +58,7 @@ $menuSocioActivo = in_array($paginaActual, $paginasSocio);
 // Páginas del menú Contrato
 $paginasContrato = [
     'contrato.php',
+    'lista-contrato.php',
     'lista-contratos.php'
 ];
 
@@ -206,6 +207,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                                 <i class="nav-icon bi bi-list"></i>
                                 <p>Asignar Ruta</p>
                             </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -249,7 +251,7 @@ $menuContratoActivo = in_array($paginaActual, $paginasContrato);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="lista-contratos.php" class="nav-link <?= $paginaActual == 'lista-contratos.php' ? 'active' : '' ?>">
+                            <a href="lista-contrato.php" class="nav-link <?= ($paginaActual == 'lista-contrato.php' || $paginaActual == 'lista-contratos.php') ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Consulta</p>
                             </a>

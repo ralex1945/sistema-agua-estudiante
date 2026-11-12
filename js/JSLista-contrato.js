@@ -47,107 +47,137 @@ document.addEventListener("DOMContentLoaded", async () => {
         paginationSizeSelector: [10, 25, 50, 100],
         movableColumns: true,
         columns: [
+            { title: "corr", field: "correlativo", visible: false },
             { title: "ID", field: "idcontrato", visible: false },
-            { title: "N° Contrato", field: "ncontrato", hozAlign: "center", width: 130 },
-            { title: "Fecha", field: "fecha", hozAlign: "center" },
+            { title: "DUI", field: "dui" },
+            { title: "Nombre", field: "nombre" },
+            { title: "Apellido", field: "apellido" },
+            { title: "Nº Contrato", field: "ncontrato" },
+            { title: "Fecha", field: "fecha" },
             { title: "Monto ($)", field: "monto", hozAlign: "right" },
-            { title: "Prima ($)", field: "prima", hozAlign: "right", visible: false },
-            { title: "ID Socio", field: "idsocio", visible: false },
-            { title: "Socio", field: "socio" },
-            { title: "Empleado 1", field: "empleado1" },
-            { title: "Cargo 1", field: "cargo1" },
-            { title: "Empleado 2", field: "empleado2" },
-            { title: "Cargo 2", field: "cargo2" },
+
+            {
+                title: "Tiene Medidor?", field: "asignado", hozAlign: "center", headerSort: false,
+                formatter: function (cell) {
+                    const asignado = cell.getValue();
+                    if (asignado === "Asignado") {
+                        return `<span style="color: green; font-size: 20px;" title="Tiene Medidor">   
+                        <i  class="bi bi-check-circle-fill"></i>
+                        </span> `;
+                    } else {
+                        return `<span style="color: red; font-size: 20px;" title="No Tiene Medidor">   
+                        <i  class="bi bi-x-circle-fill"></i>
+                        </span>`;
+                    }
+                }
+            },
+
+
             {
                 title: "Acciones", field: "acciones", hozAlign: "center", headerSort: false,
                 formatter: function () {
                     return `
-                    <button type="button" class="btn btn-outline-secondary btn-editar" title="Editar">
-                        <i class="bi bi-pencil" aria-hidden="true"> </i>
-                    </button>
-                    <button type="button" class="btn btn-outline-danger btn-eliminar" title="Eliminar">
-                        <i class="bi bi-trash" aria-hidden="true"> </i>
-                    </button>
+                        <select class="form-select form-select-sm accion-empleado">
+                            <option value="">Seleccionar...</option>
+                            <option value="modificar">Modificar</option>
+                            <option value="eliminar">Eliminar</option>
+                            <option value="medidor">Asignar Medidor</option>
+
+                        </select>
                     `;
                 },
+                cellEdited: function (cell) {
+                    console.log(cell.getValue());
+                },
+
                 cellClick: function (e, cell) {
-                    const contrato = cell.getRow().getData();
+                    if (e.target.matches(".accion-empleado")) {
+                        e.target.onchange = function () {
+                            const accion = this.value;
+                            const contrato = cell.getRow().getData();
 
-                    if (e.target.closest(".btn-editar")) {
-                        location.href = "contrato.php?id=" + contrato.idcontrato;
-                    }
-
-                    if (e.target.closest(".btn-eliminar")) {
-                        Swal.fire({
-                            title: "Poseidon",
-                            text: "Confirmar Eliminacion de Registro?",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Si, Confirmo"
-                        }).then(async (result) => {
-                            if (result.isConfirmed) {
-                                try {
-                                    const datos = new FormData();
-                                    datos.append("idcontrato", contrato.idcontrato);
-                                    datos.append("opcion", "eliminar");
-
-                                    const respuesta = await fetch("DAOContrato.php", {
-                                        method: "POST",
-                                        body: datos
-                                    });
-
-                                    if (!respuesta.ok) {
-                                        throw new Error("Error de Comunicacion " + respuesta.status);
-                                    }
-
-                                    const resultado = await respuesta.json();
-
-                                    if (resultado.estado) {
-                                        Swal.fire({
-                                            position: "top-end",
-                                            icon: "success",
-                                            title: "Poseidon",
-                                            text: resultado.mensaje,
-                                            showConfirmButton: false,
-                                            timer: 1500
-                                        }).then(() => {
-                                            window.location.href = "lista-contratos.php";
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            icon: "error",
-                                            title: "Poseidon",
-                                            text: resultado.mensaje || "Error al eliminar"
-                                        });
-                                    }
-                                } catch (error) {
-                                    console.error(error);
-                                }
+                            if (accion === "modificar") {
+                                location.href = "contrato.php?id=" + contrato.idcontrato;
                             }
-                        });
+
+                            if (accion === "medidor") {
+                                location.href = "medidor.php?id=" + contrato.idcontrato;
+                            }
+
+                            if (accion === "eliminar") {
+                                Swal.fire({
+                                    title: "Poseidon",
+                                    text: "Confirmar Eliminacion de Registro?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Si, Confirmo"
+                                }).then(async (result) => {
+                                    if (result.isConfirmed) {
+                                        try {
+
+                                            const datos = new FormData();
+
+                                            datos.append("idcontrato", contrato.idcontrato);
+                                            datos.append("opcion", "eliminar");
+
+                                            const respuesta = await fetch("DAOContrato.php", {
+                                                method: "POST",
+                                                body: datos
+                                            });
+
+                                            //verificar respuesta
+
+                                            if (!respuesta.ok) {
+                                                throw new Error("Error de Comunicacion" + respuesta.status);
+                                            }
+
+                                            const resultado = await respuesta.json();
+
+
+                                            if (resultado.estado) {
+                                                Swal.fire({
+                                                    position: "top-end",
+                                                    icon: "success",
+                                                    title: "Poseidon",
+                                                    text: resultado.mensaje,
+                                                    showConfirmButton: false,
+                                                    timer: 1500
+                                                }).then(() => {//cuando desaparece el mensaje se recarga la pagina
+                                                    window.location.href = "lista-contrato.php";
+                                                });
+                                            }
+                                        } catch (error) {
+                                        }
+                                    }
+                                });
+                            }
+
+                            //this.value = "";
+                        };
                     }
                 }
             }
         ]
     });
 
+
+
     function actualizarContador() {
         const total = tabla.getDataCount("active");
-        if (contador) {
-            contador.textContent = `Total de Contratos: ${total}`;
-        }
+        contador.textContent = `Total de Registros: ${total}`;
     }
 
     tabla.on("dataLoaded", actualizarContador);
+    tabla.on("dataFiltered", actualizarContador);
+    tabla.on("dataChanged", actualizarContador);
     tabla.on("dataFiltered", function (filters, filas) {
-        if (contador) {
-            contador.textContent = `Total de Contratos: ${filas.length}`;
-        }
+        contador.textContent = `Total de Registros: ${filas.length}`;
     });
 
     try {
+
         Swal.fire({
             title: "Cargando...",
             text: "Espere",
@@ -168,18 +198,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             throw new Error("Error HTTP: " + respuesta.status);
         }
 
-        const contratos = await respuesta.json();
+        const registros = await respuesta.json();
         Swal.close();
 
-        if (!Array.isArray(contratos)) {
-            throw new Error(contratos.mensaje || "Respuesta no válida");
+        if (!Array.isArray(registros)) {
+            throw new Error(registros.error || "Respuesta no válida");
         }
 
-        await tabla.replaceData(contratos);
+        await tabla.replaceData(registros);
         actualizarContador();
 
     } catch (error) {
-        Swal.close();
         console.error("Error al cargar registros:", error);
         contenedor.textContent = "No se pudieron cargar los registros.";
     }
@@ -195,21 +224,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             tabla.setFilter([
                 [
-                    { field: "ncontrato", type: "like", value: valor },
+
+                    { field: "dui", type: "like", value: valor },
+                    { field: "nombre", type: "like", value: valor },
+                    { field: "apellido", type: "like", value: valor },
                     { field: "fecha", type: "like", value: valor },
-                    { field: "monto", type: "like", value: valor },
-                    { field: "socio", type: "like", value: valor },
-                    { field: "empleado1", type: "like", value: valor },
-                    { field: "cargo1", type: "like", value: valor },
-                    { field: "empleado2", type: "like", value: valor },
-                    { field: "cargo2", type: "like", value: valor }
+
                 ]
             ]);
         });
     }
 
+
     btnImprimir?.addEventListener("click", () => {
-        window.print();
+        alert("Filtro: " + filtro.value);
     });
 });
-

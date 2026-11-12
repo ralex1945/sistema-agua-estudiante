@@ -1,4 +1,3 @@
-
 //////////PROCESA AL TERMINAR DE CARGAR LA PAGINA
 document.addEventListener("DOMContentLoaded", async () => {
     const contenedor = document.getElementById("users-table");
@@ -14,21 +13,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         langs: {
             "es-es": {
                 "pagination": {
-                    "page_size": "Registros por página",
+                    "page_size": "Registros por pÃ¡gina",
                     "first": "Primera",
-                    "first_title": "Primera página",
-                    "last": "Última",
-                    "last_title": "Última página",
+                    "first_title": "Primera pÃ¡gina",
+                    "last": "Ãšltima",
+                    "last_title": "Ãšltima pÃ¡gina",
                     "prev": "Anterior",
-                    "prev_title": "Página anterior",
+                    "prev_title": "PÃ¡gina anterior",
                     "next": "Siguiente",
-                    "next_title": "Página siguiente",
+                    "next_title": "PÃ¡gina siguiente",
                     "all": "Todos",
                     "counter": {
                         "showing": "Mostrando",
                         "of": "de",
                         "rows": "registros",
-                        "pages": "páginas"
+                        "pages": "pÃ¡ginas"
                     }
                 },
                 "data": {
@@ -48,16 +47,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         paginationSizeSelector: [10, 25, 50, 100],
         movableColumns: true,
         columns: [
-            { title: "ID", field: "idempleado", visible:false },
+            { title: "ID", field: "idempleado", visible: false },
             { title: "DUI", field: "dui" },
             { title: "Nombre", field: "nombre" },
             { title: "Apellido", field: "apellido" },
             { title: "Telefono", field: "telefono" },
             { title: "Fecha Ingreso", field: "fecha_ingreso" },
-            { title: "ISSS", field: "n_isss", visible:false },
-            { title: "N AFP", field: "nup", visible:false },
-            { title: "Afp", field: "afp", visible:false },
-            { title: "Tipo Renta", field: "renta", visible:false },
+            { title: "ISSS", field: "n_isss", visible: false },
+            { title: "NÂ° AFP", field: "nup", visible: false },
+            { title: "AFP", field: "afp", visible: false },
+            { title: "Tipo Renta", field: "renta", visible: false },
             { title: "Sueldo ($)", field: "sueldo" },
             { title: "Cargo", field: "idcargo" },
             { title: "Canton", field: "idcanton" },
@@ -131,7 +130,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         });
                     }
                 }
-            },
+            }
+            /*,
             {
                 title: "Acciones", field: "acciones", hozAlign: "center", headerSort: false,
                 formatter: function () {
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         };
                     }
                 }
-            }
+            }*/
         ]
     });
 
@@ -228,70 +228,74 @@ document.addEventListener("DOMContentLoaded", async () => {
     tabla.on("dataFiltered", function (filters, filas) {
         contador.textContent = `Total de Registros: ${filas.length}`;
     });
-
-    contenedor.addEventListener("change", function (e) {
-        if (!e.target.matches("select.accion-empleado")) return;
-
-        const accion = e.target.value;
-        const fila = tabla.getRow(e.target.closest(".tabulator-row"));
-
-        if (!fila || !accion) return;
-
-        const empleado = fila.getData();
-
-        if (accion === "modificar") {
-            location.href = "empleado.php?id=" + empleado.idempleado;
-        } else if (accion === "eliminar") {
-            Swal.fire({
-                title: "Poseidon",
-                text: "Confirmar Eliminacion de Registro?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Si, Confirmo"
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-
-                        const datos = new FormData();
-
-                        datos.append("idempleado", empleado.idempleado);
-                        datos.append("opcion", "eliminar");
-
-                        const respuesta = await fetch("DAOEmpleado.php", {
-                            method: "POST",
-                            body: datos
-                        });
-
-                        //verificar respuesta
-
-                        if (!respuesta.ok) {
-                            throw new Error("Error de Comunicacion" + respuesta.status);
-                        }
-
-                        const resultado = await respuesta.json();
-
-
-                        if (resultado.estado) {
-                            Swal.fire({
-                                position: "top-end",
-                                icon: "success",
-                                title: "Poseidon",
-                                text: resultado.mensaje,
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {//cuando desaparece el mensaje se recarga la pagina
-                                window.location.href = "lista-empleados.php";
+    /*
+        contenedor.addEventListener("change", function (e) {
+            if (!e.target.matches("select.accion-empleado")) return;
+    
+            const accion = e.target.value;
+            const fila = tabla.getRow(e.target.closest(".tabulator-row"));
+    
+            if (!fila || !accion) return;
+    
+            const empleado = fila.getData();
+    
+            if (accion === "modificar") {
+                location.href = "empleado.php?id=" + empleado.idempleado;
+                //console.log("Modificar empleado:", empleado.idempleado);
+                //alert("Modificar: " + empleado.idempleado);
+            } else if (accion === "eliminar") {
+                //console.log("Eliminar empleado:", empleado.idempleado);
+                //alert("Eliminar: " + empleado.nombre);
+                Swal.fire({
+                    title: "Poseidon",
+                    text: "Confirmar Eliminacion de Registro?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, Confirmo"
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+    
+                            const datos = new FormData();
+    
+                            datos.append("idempleado", empleado.idempleado);
+                            datos.append("opcion", "eliminar");
+    
+                            const respuesta = await fetch("DAOEmpleado.php", {
+                                method: "POST",
+                                body: datos
                             });
+    
+                            //verificar respuesta
+    
+                            if (!respuesta.ok) {
+                                throw new Error("Error de Comunicacion" + respuesta.status);
+                            }
+    
+                            const resultado = await respuesta.json();
+    
+    
+                            if (resultado.estado) {
+                                Swal.fire({
+                                    position: "top-end",
+                                    icon: "success",
+                                    title: "Poseidon",
+                                    text: resultado.mensaje,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {//cuando desaparece el mensaje se recarga la pagina
+                                    window.location.href = "lista-empleados.php";
+                                });
+                            }
+                        } catch (error) {
                         }
-                    } catch (error) {
                     }
-                }
-            });
-
-        }
-    });
+                });
+    
+            }
+        });*/
 
 
     try {
@@ -320,7 +324,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         Swal.close();
 
         if (!Array.isArray(empleados)) {
-            throw new Error(empleados.error || "Respuesta no válida");
+            throw new Error(empleados.error || "Respuesta no vÃ¡lida");
         }
 
         await tabla.replaceData(empleados);
@@ -347,8 +351,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     { field: "nombre", type: "like", value: valor },
                     { field: "apellido", type: "like", value: valor },
                     { field: "telefono", type: "like", value: valor },
-                    { field: "nombreCompleto", type: "like", value: valor },
-                    { field: "tamanio", type: "like", value: valor }
+                    { field: "fecha_ingreso", type: "like", value: valor },
+                    { field: "n_isss", type: "like", value: valor },
+                    { field: "nup", type: "like", value: valor },
+                    { field: "renta", type: "like", value: valor },
+                    { field: "sueldo", type: "like", value: valor },
+                    { field: "afp", type: "like", value: valor },
+                    { field: "idcanton", type: "like", value: valor },
+                    { field: "estado", type: "like", value: valor },
+                    { field: "idcargo", type: "like", value: valor }
+
                 ]
             ]);
         });
@@ -361,9 +373,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 });
-
-
-
-
-
-
