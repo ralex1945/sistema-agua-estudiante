@@ -25,11 +25,20 @@ $paginasCanton = [
 
 $menuCantonActivo = in_array($paginaActual, $paginasCanton);
 
+// Páginas del menú Configuración > Tarifa
+$paginasTarifa = [
+    'tarifa.php',
+    'lista-tarifa.php'
+];
+
+$menuTarifaActivo = in_array($paginaActual, $paginasTarifa);
+
 // Páginas del menú Configuración, merge agrega mas opciones al vector
 $paginasConfiguracion = array_merge(
     $paginasRuta,
     $paginasCargo,
     $paginasCanton,
+    $paginasTarifa,
     ['empresa.php', 'editors.php']
 );
 
@@ -187,6 +196,30 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
                                 </li>
                                 <li class="nav-item">
                                     <a href="lista-cantones.php" class="nav-link <?= $paginaActual == 'lista-cantones.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-list"></i>
+                                        <p>Consultar</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item <?= $menuTarifaActivo ? 'menu-open' : '' ?>">
+                            <a href="#" class="nav-link <?= $menuTarifaActivo ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-currency-dollar"></i>
+                                <p>
+                                    Tarifa
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="tarifa.php" class="nav-link <?= $paginaActual == 'tarifa.php' ? 'active' : '' ?>">
+                                        <i class="nav-icon bi bi-geo-alt"></i>
+                                        <p>Nuevo</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="lista-tarifa.php" class="nav-link <?= $paginaActual == 'lista-tarifa.php' ? 'active' : '' ?>">
                                         <i class="nav-icon bi bi-list"></i>
                                         <p>Consultar</p>
                                     </a>

@@ -1072,6 +1072,48 @@ ALTER TABLE `empleado`
 --
 ALTER TABLE `empleado`
   MODIFY `idempleado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1035;
+--
+-- Estructura de tabla para la tabla `tarifa`
+--
+
+CREATE TABLE IF NOT EXISTS `tarifa` (
+  `idtarifa` int(11) NOT NULL AUTO_INCREMENT,
+  `desde` int(11) NOT NULL,
+  `hasta` int(11) DEFAULT NULL,
+  `tipo_cobro` text NOT NULL,
+  `precio` float NOT NULL,
+  PRIMARY KEY (`idtarifa`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tarifa`
+--
+
+INSERT INTO `tarifa` (`idtarifa`, `desde`, `hasta`, `tipo_cobro`, `precio`) VALUES
+(1, 0, 10, 'FIJO', 2.29),
+(2, 11, 20, 'POR_METRO', 0.21),
+(3, 21, 21, 'POR_METRO', 0.25),
+(4, 22, 22, 'POR_METRO', 0.28),
+(5, 23, 23, 'POR_METRO', 0.31),
+(6, 24, 24, 'POR_METRO', 0.34),
+(7, 25, 30, 'POR_METRO', 0.37),
+(8, 31, 31, 'POR_METRO', 0.42),
+(9, 32, 32, 'POR_METRO', 0.48),
+(10, 33, 33, 'POR_METRO', 0.54),
+(11, 34, 34, 'POR_METRO', 0.64),
+(12, 35, 40, 'POR_METRO', 0.76),
+(13, 41, 41, 'POR_METRO', 0.9),
+(14, 42, 42, 'POR_METRO', 1.05),
+(15, 43, 43, 'POR_METRO', 1.2),
+(16, 44, 44, 'POR_METRO', 1.4),
+(17, 45, 50, 'POR_METRO', 1.65),
+(18, 51, 60, 'POR_METRO', 1.9),
+(19, 61, 70, 'POR_METRO', 2.2),
+(20, 71, 80, 'POR_METRO', 2.5),
+(21, 81, 90, 'POR_METRO', 2.8),
+(22, 91, 100, 'POR_METRO', 3.1),
+(23, 101, 9999, 'POR_METRO', 3.5);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
