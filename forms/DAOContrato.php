@@ -204,6 +204,36 @@ if ($opcion == "consultarIndividual") {
     $conexion->close();
 }
 
+if ($opcion == "consultarEmpleados") {
+    require_once "../config/conexion.php";
+
+    try {
+        $sql = "SELECT idempleado, CONCAT(nombre, ' ', apellido) as nombre FROM empleado ORDER BY nombre, apellido";
+        $resultado = $conexion->query($sql);
+
+        if (!$resultado) {
+            throw new Exception("Error al consultar los registros");
+        }
+
+        $empleados = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $empleados[] = [
+                'idempleado' => $fila['idempleado'],
+                'nombre' => $fila['nombre']
+            ];
+        }
+
+        echo json_encode($empleados, JSON_UNESCAPED_UNICODE);
+        $resultado->free();
+        $conexion->close();
+    } catch (Throwable $e) {
+        echo json_encode([
+            "mensaje" => "No se pudieron obtener los registros: " . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
+    exit;
+}
+
 if ($opcion == "consultarLectores") {
     require_once "../config/conexion.php";
 
