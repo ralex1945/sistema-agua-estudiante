@@ -1,4 +1,4 @@
-//////////PROCESA AL TERMINAR DE CARGAR LA PAGINA
+﻿//////////PROCESA AL TERMINAR DE CARGAR LA PAGINA
 document.addEventListener("DOMContentLoaded", async () => {
     const contenedor = document.getElementById("users-table");
     const filtro = document.getElementById("table-filter");
@@ -65,6 +65,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 title: "Acciones", field: "acciones", hozAlign: "center", headerSort: false,
                 formatter: function () {
                     return `
+                    <button type="button" class="btn btn-outline-secondary btn-privilegio">
+                        <i class="bi bi-person-fill-lock" aria-hidden="true"> </i>
+                    </button>
                     <button type="button" class="btn btn-outline-secondary btn-editar">
                         <i class="bi bi-pencil" aria-hidden="true"> </i>
                     </button>
@@ -78,6 +81,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     if (e.target.closest(".btn-editar")) {
                         location.href = "empleado.php?id=" + empleado.idempleado;
+                    }
+
+                    if (e.target.closest(".btn-privilegio")) {
+                        location.href = "nivel-acceso.php?id=" + empleado.idempleado;
                     }
 
                     if (e.target.closest(".btn-eliminar")) {
@@ -373,3 +380,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 });
+
+const btnCerrarSesion = document.getElementById("cerrarSesion");
+if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "¿Cerrar sesión?",
+            text: "Se cerrará tu sesión actual.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, salir",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "salir.php";
+            }
+        });
+    });
+}

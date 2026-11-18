@@ -1,5 +1,10 @@
 <?php
 $paginaActual = basename($_SERVER['PHP_SELF']);
+$rolesUsuario = isset($_SESSION['rol']) ? array_map('trim', explode(',', $_SESSION['rol'])) : [];
+
+function tieneRol($rol, $roles) {
+    return in_array($rol, $roles);
+}
 
 // Páginas del menú Configuración > Ruta
 $paginasRuta = [
@@ -106,6 +111,14 @@ $paginasRecibos = [
 
 $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
 
+// Páginas del menú PAGOS
+$paginasPagos = [
+    'pago.php',
+    'buscar.php'
+];
+
+$menuPagosActivo = in_array($paginaActual, $paginasPagos);
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -138,6 +151,7 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
             <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
 
+                <?php if (tieneRol('admin', $rolesUsuario)): ?>
                 <li class="nav-item <?= $menuConfiguracionActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuConfiguracionActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-circle-fill"></i>
@@ -265,6 +279,8 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                 </li>
 
 
+                <?php endif; ?>
+                <?php if (tieneRol('admin', $rolesUsuario)): ?>
                 <li class="nav-item <?= $menuEmpleadoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuEmpleadoActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-box-arrow-in-right"></i>
@@ -295,6 +311,8 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                     </ul>
                 </li>
 
+                <?php endif; ?>
+                <?php if (tieneRol('admin', $rolesUsuario) || tieneRol('cobro', $rolesUsuario)): ?>
                 <li class="nav-item <?= $menuSocioActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuSocioActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-person"></i>
@@ -319,6 +337,8 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                     </ul>
                 </li>
 
+                <?php endif; ?>
+                <?php if (tieneRol('admin', $rolesUsuario) || tieneRol('cobro', $rolesUsuario)): ?>
                 <li class="nav-item <?= $menuContratoActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuContratoActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-check2-square"></i>
@@ -343,6 +363,8 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                     </ul>
                 </li>
 
+                <?php endif; ?>
+                <?php if (tieneRol('admin', $rolesUsuario) || tieneRol('cobro', $rolesUsuario)): ?>
                 <li class="nav-item <?= $menuMedidorActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuMedidorActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-x-diamond"></i>
@@ -361,6 +383,8 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                     </ul>
                 </li>
 
+                <?php endif; ?>
+                <?php if (tieneRol('admin', $rolesUsuario) || tieneRol('lector', $rolesUsuario)): ?>
                 <li class="nav-item <?= $menuLecturaActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuLecturaActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-calculator"></i>
@@ -379,6 +403,8 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                     </ul>
                 </li>
 
+                <?php endif; ?>
+                <?php if (tieneRol('admin', $rolesUsuario) || tieneRol('cobro', $rolesUsuario)): ?>
                 <li class="nav-item <?= $menuRecibosActivo ? 'menu-open' : '' ?>">
                     <a href="#" class="nav-link <?= $menuRecibosActivo ? 'active' : '' ?>">
                         <i class="nav-icon bi bi-file-check"></i>
@@ -402,6 +428,34 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                         </li>
                     </ul>
                 </li>
+
+                <?php endif; ?>
+                <?php if (tieneRol('admin', $rolesUsuario) || tieneRol('caja', $rolesUsuario) || tieneRol('cobro', $rolesUsuario)): ?>
+                <li class="nav-item <?= $menuPagosActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuPagosActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-currency-dollar"></i>
+                        <p>
+                            PAGOS
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="pago.php" class="nav-link <?= $paginaActual == 'pago.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-currency-dollar"></i>
+                                <p>Pagar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="buscar.php" class="nav-link <?= $paginaActual == 'buscar.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-search"></i>
+                                <p>Buscar</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <?php endif; ?>
 
                 <!--
                 <li class="nav-item">
