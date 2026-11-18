@@ -98,6 +98,14 @@ $paginasLectura = [
 
 $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
 
+// Páginas del menú Recibos
+$paginasRecibos = [
+    'lista-recibos.php',
+    'lista-imprimirRecibos.php'
+];
+
+$menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -366,6 +374,30 @@ $menuLecturaActivo = in_array($paginaActual, $paginasLectura);
                             <a href="lectura.php" class="nav-link <?= $paginaActual == 'lectura.php' ? 'active' : '' ?>">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Nuevo</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item <?= $menuRecibosActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuRecibosActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-file-check"></i>
+                        <p>
+                            Generar Recibos
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="lista-recibos.php" class="nav-link <?= $paginaActual == 'lista-recibos.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-person-plus"></i>
+                                <p>Generar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="lista-imprimirRecibos.php" class="nav-link <?= $paginaActual == 'lista-imprimirRecibos.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-list"></i>
+                                <p>Imprimir</p>
                             </a>
                         </li>
                     </ul>
