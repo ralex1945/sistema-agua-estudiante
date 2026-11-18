@@ -106,6 +106,14 @@ $paginasRecibos = [
 
 $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
 
+// Páginas del menú PAGOS
+$paginasPagos = [
+    'pago.php',
+    'buscar.php'
+];
+
+$menuPagosActivo = in_array($paginaActual, $paginasPagos);
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
@@ -400,6 +408,31 @@ $menuRecibosActivo = in_array($paginaActual, $paginasRecibos);
                                 <p>Imprimir</p>
                             </a>
                         </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item <?= $menuPagosActivo ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= $menuPagosActivo ? 'active' : '' ?>">
+                        <i class="nav-icon bi bi-currency-dollar"></i>
+                        <p>
+                            PAGOS
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="pago.php" class="nav-link <?= $paginaActual == 'pago.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-currency-dollar"></i>
+                                <p>Pagar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="buscar.php" class="nav-link <?= $paginaActual == 'buscar.php' ? 'active' : '' ?>">
+                                <i class="nav-icon bi bi-search"></i>
+                                <p>Buscar</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
 

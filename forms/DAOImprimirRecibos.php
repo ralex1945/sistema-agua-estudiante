@@ -8,7 +8,7 @@ if ($opcion == "consultar") {
     try {
         $sql = "SELECT re.nrecibo,ca.nombre,
         ru.nombre AS nombreRuta,
-        re.idrecibo AS idrecibos,
+        re.idrecibos,
         me.nmedidor,
         CONCAT(co.mes, '-', co.anio) AS periodo,
         co.fecha_lectura,
@@ -92,7 +92,7 @@ if ($opcion == 'imprimir') {
             recibos.nrecibo,
             canton.nombre AS nombreCanton,
             ruta.nombre AS nombreRuta,
-            recibos.idrecibo AS idrecibos,
+            recibos.idrecibos,
             medidor.nmedidor,
             CONCAT(consumo.mes, '-', consumo.anio) AS periodo,
             DATE_FORMAT(consumo.fecha_lectura, '%d/%m/%Y') AS fecha_lectura,
@@ -115,7 +115,7 @@ INNER JOIN contrato
     ON medidor.idcontrato=contrato.idcontrato
 INNER JOIN socio AS socio
     ON contrato.idsocio=socio.idsocio
-where recibos.estado='PENDIENTE' AND recibos.idrecibo = ?";
+where recibos.estado='PENDIENTE' AND recibos.idrecibos = ?";
 
             $stmt = $conexion->prepare($sql);
             $stmt->bind_param("i", $idrecibos);
