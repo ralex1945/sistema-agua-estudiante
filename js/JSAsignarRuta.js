@@ -1,4 +1,4 @@
-function validarCampo(campo) {
+﻿function validarCampo(campo) {
     const valor = campo.value.trim();
     const vacio = valor === "";
 
@@ -259,3 +259,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("btnEliminar").style.display = "none";
 });
+const btnCerrarSesion = document.getElementById("cerrarSesion");
+if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener("click", function (e) {
+        e.preventDefault();
+        Swal.fire({
+            title: "¿Cerrar sesión?",
+            text: "Se cerrará tu sesión actual.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, salir",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "salir.php";
+            }
+        });
+    });
+}
