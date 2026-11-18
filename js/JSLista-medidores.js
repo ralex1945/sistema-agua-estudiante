@@ -93,6 +93,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                             const accion = this.value;
                             const medidor = cell.getRow().getData();
 
+                            if (accion === "historial") {
+                                location.href = "historial.php?id=" + medidor.idmedidor;
+                            }
+
                             if (accion === "modificar") {
                                 location.href = "medidor.php?id=" + medidor.idcontrato;
                             }
